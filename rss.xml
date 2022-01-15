@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>tommyhu Blog</title>
+        <link>https://tommyhu.me/</link>
+        <description>tommyhu Blog</description>
+        <lastBuildDate>Wed, 05 Jan 2022 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <item>
+            <title><![CDATA[webpack监听代理地址修改自动重启devServer]]></title>
+            <link>https://tommyhu.me/2022/01/05/webpack监听代理地址修改自动重启devServer</link>
+            <guid>/2022/01/05/webpack监听代理地址修改自动重启devServer</guid>
+            <pubDate>Wed, 05 Jan 2022 00:00:00 GMT</pubDate>
+            <description><![CDATA[image-20220105213328676]]></description>
+            <content:encoded><![CDATA[<p><img src="../public/images/image-20220105213328676.png" alt="image-20220105213328676"/></p><p>本文介绍解决监听开发环境代理地址更改后自动重启<code>webpack-dev-server</code>的问题。</p><h2>背景</h2><p>日常开发经常遇到的一个问题是切换 webpack 的<code>proxy</code>地址，需要重启<code>webpack-dev-server</code>或者另开一个终端去创建一个新的<code>webpack-dev-server</code>实例。</p><p>为了简化这个变态的过程，于是探索借助<code>chokidar</code>监听系统文件的能力，来监听<code>proxy</code>配置文件的修改并配合<code>webpack-dev-server</code>的 Nodejs  API达到自动重启的目的。</p><h2>什么是chokidar</h2><p><a href="https://github.com/paulmillr/chokidar">chokidar</a> 是一个基于 Nodejs 的<code>fs</code>模块开发的监听文件的工具，跨平台，同时解决了<code>fs</code>模块提供的原生方法<code>fs.watch</code>和<code>fs.watchFile</code>的不足。</p><h3>fs.watchFile</h3><p><code>fs.watchFile(filename[, options], listener)</code>用来监听单个文件的变化，其采用轮询的方法，可以指定<code>interval</code>设置轮询时间间隔，默认是<code>5007ms</code>，并且当文件被访问就会触发回调函数<code>listener</code>。</p><p><code>fs.watchFile</code>的主要问题在于采用轮询的方式导致监听不精确，并且 CPU 占用高。</p><h3>fs.watch</h3><p><code>fs.watch(filename[, options][, listener])</code>可以监听单个文件或者文件夹，可以通过<code>eventType</code>指定监听文件命名或者修改文件内容导致的变化，但是<code>fs.watch</code> API 跨平台并非 100% 一致，并且在某些情况下不可用，至于什么情况下不可用，官方文档也没解释。在 Windows 上，如果监视目录被移动或重命名，则不会触发任何事件。</p><h3>chokidar.watch(paths, <!-- -->[options]<!-- -->)</h3><p>chokidar 解决了<code>fs.watch</code>和<code>fs.watchFile</code>的不足，并且 API 简单易用且监听效率更加高效，使得 vscode 内部的监听文件也使用了这个工具。</p><h2>API</h2><h3>配置项</h3><pre><code class="language-js">chokidar.watch(&#x27;file&#x27;, {
+  // 是否持久化触发监听事件
+  persistent: true,
+  // 忽略监听的文件
+  ignored: &#x27;*.txt&#x27;,
+  // 当设置为false时候，在 chokidar 初始化完成之前新增文件或者文件夹也会触发 add 和 addDir事件
+  ignoreInitial: false,
+  // 当设置成 false 时，只有 symlink 本身会被观察到变化，而不是跟随链接引用和冒泡事件通过链接的路径
+  followSymlinks: true,
+  // 监听文件或者文件夹的相对根目录
+  cwd: &#x27;.&#x27;,
+  // 当设置成 true 的时候，会忽略 glob 模式的path设置，把它们当成文件名的一部分
+  disableGlobbing: false,
+    // 当设置成 false，使用 fs.watchFile 或者 fs.watch 监听文件
+  usePolling: false,
+    // 针对 fs.watchFile 设置的轮询间隔
+    interval: 100,
+    binaryInterval: 300,
+  alwaysStat: false,
+  // 设置多少层的子文件目录会被递归监听
+  depth: 99,
+  // 默认情况下，add事件将在文件首次出现在磁盘上时触发，此时还没有写入整个文件。此外，在某些情况下，在写入文件时将触发一些更改事件。在某些情况下，特别是在监视大文件时，将需要等待写操作完成，然后才能响应文件的创建或修改。将awaitWriteFinish设置为true(或true值)将轮询文件大小，保持其添加和更改事件，直到大小在可配置的时间内不变。适当的持续时间设置在很大程度上依赖于操作系统和硬件。为了准确的检测，这个参数应该相对较高，使得文件监视的响应更少。谨慎使用。
+  awaitWriteFinish: {
+    stabilityThreshold: 2000,
+    pollInterval: 100
+  },
+    // 指示是否监视没有读权限的文件
+  ignorePermissionErrors: false,
+  // 监听更为细节的控制，如果一个文件在被删除后的100毫秒内被重新添加，Chokidar会发出一个change事件，而不是unlink然后添加。如果默认的100毫秒不适合你，可以通过设置一个自定义值来覆盖它，以毫秒为单位。
+  atomic: true
+});
+</code></pre><h3>监听事件</h3><p><code>chokidar.watch</code>返回一个对象，可以使用该对象的<code>.on(event, callback)</code>方法设置监听事件<code>event</code>和回调函数<code>callback</code>，<code>event</code>类型如下：</p><ul><li><code>add</code>：新增文件</li><li><code>addDir</code>：新增文件夹</li><li><code>change</code>：文件内容变化</li><li><code>unlink</code>：删除文件</li><li><code>unlink</code>：删除文件夹</li><li><code>ready</code>：扫描文件或文件夹结束，开始监听</li><li><code>error</code>：监听程序报错</li></ul><h2>WDS 的 Nodejs API</h2><p><code>webpack-dev-server</code>提供 <a href="https://webpack.js.org/api/webpack-dev-server/">Nodejs 的 API</a>，也就几个：</p><ul><li><code>start</code>：启动 WDS；</li><li><code>startCallback</code>：启动并指定启动完的回调；</li><li><code>stop</code>：停止 WDS；</li><li><code>stopCallback</code>：停止并指定停止后的回调】</li></ul><h3>实现思路</h3><p>在 WDS 提供的 Nodejs API 的基础上，我们利用<code>startCallback</code>回调注册<code>chokidar</code>监听文件的程序，当检测到<code>proxy</code>配置的文件变化后，<code>stop</code> WDS 并重启一个新的 WDS 实例。</p><pre><code class="language-js">// server.js
+const Webpack = require(&#x27;webpack&#x27;);
+const WebpackDevServer = require(&#x27;webpack-dev-server&#x27;);
+const webpackConfig = require(&#x27;./webpack.config.js&#x27;);
+const proxy = require(&#x27;./proxyConfig&#x27;);
+const chokidar = require(&#x27;chokidar&#x27;);
+
+const compiler = Webpack(webpackConfig);
+const server = new WebpackDevServer({
+  ...webpackConfig.devServer,
+  proxy
+}, compiler);
+
+function createServer() {
+  const server = new WebpackDevServer({
+    ...webpackConfig.devServer,
+    proxy
+  }, compiler);
+
+  server.startCallback(() =&gt; {
+    const watcher = chokidar.watch(&#x27;./proxyConfig.js&#x27;).on(&#x27;change&#x27;, () =&gt; {
+      console.log(&quot;checked dev-server proxy changes, restarting server&quot;);
+      server.stopCallback(() =&gt; {
+        watcher.close();
+        createServer();
+      });
+    });
+  });
+}
+
+createServer();
+</code></pre><pre><code class="language-js">// proxyConfig.js
+module.exports = {
+  &quot;/api&quot;: {
+    target: &quot;http://127.0.0.2&quot;
+  }
+}
+</code></pre><p>然后开发环境的情况下使用我们的<code>server.js</code>程序替代 webpack 的 cli 命令，即<code>node server.js</code>，这样就可以了。</p><p><img src="../public/images/image-20220105224129440.png" alt="image-20220105224129440"/></p>]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[个人网站迁移]]></title>
+            <link>https://tommyhu.me/2022/01/04/个人网站迁移</link>
+            <guid>/2022/01/04/个人网站迁移</guid>
+            <pubDate>Tue, 04 Jan 2022 00:00:00 GMT</pubDate>
+            <description><![CDATA[image20220104221756]]></description>
+            <content:encoded><![CDATA[<p><img src="../public/images/image_20220104221756.png" alt="image_20220104221756"/></p><p>新年伊始，将个人网站从 dumi 迁移到了 docusaurus。</p><blockquote><p>地址：<a href="https://tommyhu.me">https://tommyhu.me</a></p><p>仓库：<a href="https://github.com/freedomdebug/freedomdebug.github.io/tree/master/docs">freedomdebug/freedomdebug.github.io: blog (github.com)</a></p></blockquote><h2>背景</h2><p>过去一年多的时间，我都在用 dumi 构建自己的前端知识体系文档，期间升级过很多次 dumi 的版本，也看着 dumi 从 200 多 star 逐渐增长到 2k 多 star。</p><p>过去选择 dumi，主要看中的是 dumi 对于在线文档的交互能力，因为有时候学习一个新的知识点总想着用 demo 的方式去实现，尤其是 CSS 这种的。而 dumi 提供的交互能力恰好可以满足我的这一个需求。同时配合 Typora 编写 markdown 文档十分的方便。</p><p>不过同时我也注意到了 docusaurus （这个取自<code>document</code>和<code>saurus</code>组合词的名称真的太难记了）这个文档生成工具，不过一年前这个工具还比较稚嫩，提供的能力不太全面，所以就放弃了。不过随着越来越多的网站开始使用 docusaurus，我也开始了迁移之路。</p><h2>迁移步骤</h2><p>docusaurus 提供脚手架工具直接生成站点项目代码，这里直接利用脚手架来创建。</p><pre><code class="language-bash">npx create-docusaurus@latest my-website classic --typescript
+</code></pre><p>生成的项目目录如下：</p><pre><code>my-website
+├── blog
+│   ├── 2019-05-28-hola.md
+│   ├── 2019-05-29-hello-world.md
+│   └── 2020-05-30-welcome.md
+├── docs
+│   ├── doc1.md
+│   ├── doc2.md
+│   ├── doc3.md
+│   └── mdx.md
+├── src
+│   ├── css
+│   │   └── custom.css
+│   └── pages
+│       ├── styles.module.css
+│       └── index.js
+├── static
+│   └── img
+├── docusaurus.config.js
+├── package.json
+├── README.md
+├── sidebars.js
+└── yarn.lock
+</code></pre><h3>插件和预设能力</h3><p>docusaurus 提供插件和预设的配置，类似于 babel，webpack 这些工具的能力，使用 CLI 指定<code>@docusaurus/preset-classic</code>预设会同时包含至关重要的三个插件：</p><ul><li><code>@docusaurus/plugin-content-docs</code>：提供文档编写能力，对应生成的<code>docs</code>目录</li><li><code>@docusaurus/plugin-content-blog</code>：提供博客渲染能力，对应生成的<code>blog</code>目录</li><li><code>@docusaurus/plugin-content-pages</code>：提供普通前端页面的渲染能力，对应生成的<code>pages</code>目录</li></ul><p>这三种插件的配置都在<code>docusaurus.config.js</code>这个文件下，对于我个人需求来说这三种能力都需要，因此我都开启了，如果不需要的话，直接在<code>presets.docs|blog|pages</code>设置成<code>false</code>即可。</p><h3>修改主页指向</h3><p>我希望将个人博客页面作为站点主页，那么需要在<code>docusaurus.config.js</code>将<code>blog</code>对应的<a href="https://www.docusaurus.cn/docs/api/plugins/@docusaurus/plugin-content-blog#routeBasePath"><code>routeBasePath</code></a>设置成<code>/</code>，同时指定博客文档所在的目录<code>path</code>；这样其他在<code>docs</code>或者<code>pages</code>就是相对于<code>blog</code>的路由路径。</p><pre><code class="language-js">// docusaurus.config.js
+
+module.exports = {
+  presets: [
+    &quot;classic&quot;,
+    {
+      blog: {
+        // blog作为主页
+        routeBasePath: &quot;/&quot;,
+        path: &quot;./blog&quot;,
+        ...
+      },
+      pages: {
+        path: &quot;src/pages&quot;,
+        // 指定 pages 的路由路径，因为 blog 作为主页了
+        routeBasePath: &quot;/pages&quot;,
+        ...
+      }
+    }
+  ]
+}
+</code></pre><h3>顶部导航栏配置</h3><p>顶栏无非就是 Logo，导航栏这些，对应 docusaurus 提供的主题配置项的<a href="https://docusaurus.io/docs/api/themes/configuration#navbar"><code>navbar</code></a>。</p><table><thead><tr><th>配置项</th><th>类型</th><th>默认值</th><th>描述</th></tr></thead><tbody><tr><td><code>title</code></td><td><code>string</code></td><td><code>undefined</code></td><td>顶部标题</td></tr><tr><td><code>logo</code></td><td><code>object</code></td><td><code>undefined</code></td><td>顶部 logo</td></tr><tr><td><code>items</code></td><td><code>NavbarItem[]</code></td><td><code>[]</code></td><td>顶部菜单导航</td></tr><tr><td><code>hideOnScroll</code></td><td><code>boolean</code></td><td><code>false</code></td><td>是否在页面向下滚动时自动隐藏导航栏</td></tr><tr><td><code>style</code></td><td>`&#x27;primary&#x27;</td><td>&#x27;dark&#x27;`</td><td></td></tr></tbody></table><p>导航菜单通过<code>items</code>配置，docusaurus 提供 5 种菜单配置类型：</p><ul><li><code>type=&quot;link&quot;</code>：默认形式，配置<code>to</code>或者<code>href</code>指定菜单点击跳转路由；</li><li><code>type=&quot;dropdown&quot;</code>：下拉菜单导航</li></ul><p><img src="../public/images/image-20220104231019549.png" alt="image-20220104231019549"/></p><ul><li><code>type=&quot;docsVersionDropdown&quot;</code>：文档版本下拉菜单</li><li><code>type=&quot;localeDropdown&quot;</code>：文档多国语选择下拉菜单</li><li><code>type=&quot;search&quot;</code>：搜索框，需要配置<a href="https://docusaurus.io/docs/search#using-algolia-docsearch">搜索引擎</a>才可用</li></ul><p>同时顶部默认是提供网站夜间和白天主题的切换按钮。</p><p>我觉得唯一的不足就是不支持自定义菜单项的<code>icon</code>，例如需要显示 GitHub 链接，需要自己在<code>src/custom.css</code>里进行样式覆盖：</p><pre><code class="language-js">{
+  href: &quot;https://github.com/freedomdebug/freedomdebug.github.io&quot;,
+  position: &quot;right&quot;,
+  // custom logo in custom.css
+  className: &quot;header-github-link&quot;,
+ &quot;aria-label&quot;: &quot;GitHub repository&quot;,
+}
+</code></pre><pre><code class="language-css">/* GitHub Link */
+.header-github-link:hover {
+  opacity: 0.6;
+}
+
+.header-github-link:before {
+  content: &quot;&quot;;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  background: url(&quot;data:image/svg+xml,%3Csvg viewBox=&#x27;0 0 24 24&#x27; xmlns=&#x27;http://www.w3.org/2000/svg&#x27;%3E%3Cpath d=&#x27;M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12&#x27;/%3E%3C/svg%3E&quot;)
+    no-repeat;
+}
+
+html[data-theme=&quot;dark&quot;] .header-github-link:before {
+  background: url(&quot;data:image/svg+xml,%3Csvg viewBox=&#x27;0 0 24 24&#x27; xmlns=&#x27;http://www.w3.org/2000/svg&#x27;%3E%3Cpath fill=&#x27;white&#x27; d=&#x27;M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12&#x27;/%3E%3C/svg%3E&quot;)
+    no-repeat;
+}
+</code></pre><h3>文档侧栏菜单配置</h3><p><code>docusaurus</code>默认是会渲染在<code>blog</code>文件夹下的<code>.md</code>或者<code>.mdx</code>文件，对于<code>src/pages</code>目录的任何文件都会渲染成页面，而对于<code>docs</code>目录的 markdown 文件可以通过<a href="https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-docs#sidebarPath"><code>sidebarPath</code></a>来配置生成不同的侧边菜单栏。</p><p>如果使用脚手架创建文档站点，ducusaurus 会默认生成一个<code>sidebars.js</code>文件，包含下面这个默认配置项：</p><pre><code class="language-js">module.exports = {
+  mySidebar: [
+    {
+      type: &#x27;autogenerated&#x27;,
+      dirName: &#x27;.&#x27;
+    },
+  ],
+};
+</code></pre><p>默认情况下，在<code>docs</code>目录的 markdown 文件会全部显示出来，不会自动归类，而我的需求是能够根据我在 <code>docs</code>目录下创建的文件夹进行分类，并自动生成每篇文档的路由地址。来看一下 docusaurus 提供的能力 —— <a href="https://docusaurus.io/docs/sidebar#understanding-sidebar-items">Sidebar | Docusaurus</a>，对于侧边栏生成的类型有以下几种：</p><ul><li><code>type=&quot;doc&quot;</code>：配合<code>id</code>指定单个文档的标题和链接</li><li><code>type=&quot;link&quot;</code>：配合<code>href</code>指定任意跳转链接</li><li><code>type=&quot;category&quot;</code>：配合<code>items</code>指定分类包含的文档</li><li><code>type=&quot;autogenerated&quot;</code>：配合<code>dirName</code>自动生成侧边栏</li></ul><p>看起来<code>type=&quot;category&quot;</code>可以满足我的需求，但是每篇文章写完我都要配置一下侧边栏这也太麻烦了，于是我尝试了下<code>type=&quot;autogenerated&quot;</code>这个自动生成的，<code>dirname</code>配置成在<code>docs</code>下创建的目录名称就可以自动对该目录下文档进行分类，再配合顶部导航栏的<code>docId</code>指向每个文档分类下的第一篇文章，点击以后就会自动打开不同目录下归类的文档列表。</p><pre><code class="language-js">// sidebars.js
+const sidebars = {
+  javascript: [
+    {
+      type: &quot;autogenerated&quot;,
+      dirName: &quot;javascript&quot;,
+    },
+  ],
+  typescript: [
+    {
+      type: &quot;autogenerated&quot;,
+      dirName: &quot;typescript&quot;,
+    },
+  ],
+  css: [
+    {
+      type: &quot;autogenerated&quot;,
+      dirName: &quot;css&quot;,
+    },
+  ]
+}
+</code></pre><pre><code class="language-js">// docusaurus.config.js
+module.exports = {
+  themeConfig: {
+    navbar: {
+      items: [
+        {
+          type: &quot;dropdown&quot;,
+          label: &quot;Skill&quot;,
+          position: &quot;right&quot;,
+          items: [
+            {
+              type: &quot;doc&quot;,
+              label: &quot;JavaScript&quot;,
+              docId: &quot;javascript/类型/类型定义&quot;,
+            }
+            ...
+          ]
+        }
+      ]
+    }
+  }
+}
+</code></pre><h3>图片目录</h3><p>对于图片的处理，我这边没有选择图床，直接复制到指定目录下，docusaurus 提供<a href="https://docusaurus.io/docs/static-assets"><code>staticDirectories</code></a>配置项用于指定静态资源目录，默认是<code>static</code>文件夹，对于<code>static</code>文件夹的文件，全部都会在构建以后复制到网站根目录下。</p><p>而对于<code>staticDirectories</code>没有包含的文件目录，包括 markdown 中引用的图片文件等，都会在构建后复制到网站根目录的<code>assets</code>目录下(图片的话就是<code>assets/images</code>)，并且会对路径自动进行转换。利用这个能力，我在网站代码根目录下创建了<code>public/images</code>目录用于保存所有在 markdown 页面包含的图片，配合 Typora 复制图片并转换图片相对路径的能力，就可以做到在任何地方打开 markdown 都能正常显示图片。</p><p><img src="../public/images/image-20220104234147642.png" alt="image-20220104234147642"/></p><h3>网站部署</h3><p>网站部署不用多说了，依旧白嫖 GitHub Pages，docusaurus 也提供了集成 GitHub Actions 自动部署的配置参考 —— <a href="https://docusaurus.io/docs/deployment#triggering-deployment-with-github-actions">Deployment | Docusaurus</a>：</p><pre><code class="language-yaml">name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths: [website/**]
+
+jobs:
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+          cache: yarn
+      - name: Build website
+        run: |
+          yarn install --frozen-lockfile
+          yarn build
+
+      # Popular action to deploy to GitHub Pages:
+      # Docs: https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-docusaurus
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Build output to publish to the `gh-pages` branch:
+          publish_dir: ./build
+</code></pre><p>这样在使用 Typora 写完文档或者博客以后，直接<code>push</code>到 GitHub 仓库，触发 GitHub Actions 完成自动构建打包和部署，一气呵成，妈妈再也不用担心我写博客时候手忙脚乱的部署了。</p><p><img src="../public/images/image-20220104235311387.png" alt="image-20220104235311387"/></p><h3>网站全局搜索</h3><p>docusaurus 优先提供支持 Algolia 的能力，使用起来也很简单，分为三步：</p><ol><li>首先在<a href="https://github.com/algolia/docsearch-configs"><code>algolia</code>仓库</a>提交一个配置网站索引的 pr；</li><li>等 PR 合并以后在<a href="https://docsearch.algolia.com/apply/">DocSearch</a>网站提交网站的域名和联系邮箱获取<code>appId</code>和<code>apiKey</code>；</li><li>在<code>docusaurus.config.js</code>完成<a href="https://docusaurus.io/docs/search#connecting-algolia">配置</a>即可</li></ol>]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[webpack代理配置]]></title>
+            <link>https://tommyhu.me/2022/01/03/webpack代理配置</link>
+            <guid>/2022/01/03/webpack代理配置</guid>
+            <pubDate>Mon, 03 Jan 2022 00:00:00 GMT</pubDate>
+            <description><![CDATA[devServer]]></description>
+            <content:encoded><![CDATA[<h2>devServer</h2><p><a href="https://webpack.docschina.org/configuration/dev-server/#devserver"><code>webpack-devServer</code></a>，一般简称<code>WDS</code>，是 webpack 内置的用于开发环境的服务器配置。<code>webpack</code>本身提供三种方式用于开发环境修改代码以后自动编译，以提高开发效率：</p><ul><li><p><a href="https://webpack.docschina.org/guides/development/#using-watch-mode">观察模式</a></p></li><li><p><a href="https://webpack.docschina.org/configuration/dev-server/#devserver">WDS</a></p></li><li><p><a href="https://webpack.docschina.org/guides/development/#using-webpack-dev-middleware">webpack-dev-middleware</a></p></li></ul><p>总体来说，WDS 配置最容易，并且提供 HMR 的功能，只需要配置<code>devServer.hot: true</code>就直接启用，方便到了极致！下面就重点看一下 WDS 的<code>proxy</code>配置。</p><h2>http-proxy-middleware</h2><p><code>webpack</code>的 WDS 内置的<code>proxy</code>功能来自于<a href="https://github.com/chimurai/http-proxy-middleware"><code>http-proxy-middleware</code></a>这个第三方工具，正如我以前看到的一句话所说，<strong>开源最重要的不是贡献自己的代码，而是把别人的拿过来用</strong>，从开源社区的发展角度来看，这的确是核心，只有开源带动开源，才能让社区氛围更好。</p><p>废话不多说了，来看一下<code>http-proxy-middleware</code>都有哪些配置吧。</p><h2>配置</h2><h3>URL</h3><p>在了解详细配置之前，先来回顾一下 HTTP 协议下 URL 的构成：</p><p><img src="../public/images/image-20201220170902676.png" alt="image-20201220170902676"/></p><p><code>http-proxy-middleware</code>本身融合了<code>http-proxy</code>的一些配置，但是文档配置写的比较抽象，并且多数配置实际开发的时候根本用不到，这里重点关注几个比较重要的属性。</p><h3>target | string</h3><p><code>target</code>用于指定代理转发的目标域名，在 WDS 中可以按照如下设置，这样当本地请求<code>localhost:3000/api</code>的时候，就会被 WDS 转发请求<code>https://xxx.com/api</code>去</p><pre><code class="language-javascript">devServer: {
+  proxy: {
+    &quot;/api&quot;: {
+      target: &quot;https://xxx.com&quot;
+    },
+  },
+}
+</code></pre><h3>router | object/function</h3><p><code>router</code>和<code>target</code>有点类似，也是重定向转发域名的，区别是<code>target</code>只能设置一个<code>string</code>类型的域名，<code>router</code>可以指定多个域名转发的映射对象或者函数，并且会覆盖<code>target</code></p><pre><code class="language-javascript">router: {
+    &#x27;integration.localhost:3000&#x27; : &#x27;http://localhost:8001&#x27;,  // host only
+    &#x27;staging.localhost:3000&#x27;     : &#x27;http://localhost:8002&#x27;,  // host only
+    &#x27;localhost:3000/api&#x27;         : &#x27;http://localhost:8003&#x27;,  // host + path
+    &#x27;/rest&#x27;                      : &#x27;http://localhost:8004&#x27;   // path only
+}
+
+router: function(req) {
+    return &#x27;http://localhost:8004&#x27;;
+}
+</code></pre><h3>pathRewrite | object/function</h3><p>重写本地请求的 URL 中的<code>path</code>部分，设置的<code>key</code>字符串会被构造成一个正则表达式来匹配请求的 URL，需要注意的是只会重写<code>path</code>部分，前面的<code>host</code>以及后面的<code>queryString</code>都会保留下来和重写后的域名进行拼接。</p><pre><code class="language-javascript">devServer: {
+  proxy: {
+    &quot;/api&quot;: {
+      pathRewrite: {
+        &quot;^/api&quot;: &quot;/newApi&quot;, // rewrite path
+      },
+    },
+  },
+}
+
+pathRewrite: async function (path, req) {
+  const should_add_something = await httpRequestToDecideSomething(path);
+  if (should_add_something) path += &quot;something&quot;;
+  return path;
+}
+</code></pre><h3>changeOrigin | boolean</h3><p>因为<code>http-proxy-middleware</code>依赖于<a href="https://github.com/http-party/node-http-proxy">node-http-proxy</a>实现的，<code>changeOrigin</code>这个参数是从<code>http-proxy</code>中直接拿过来的，找到<code>node-http-proxy</code>的源码部分，可以发现如下有关<code>changeOrigin</code>的实现 —— <a href="https://github.com/http-party/node-http-proxy/blob/9b96cd725127a024dabebec6c7ea8c807272223d/lib/http-proxy/common.js#L99">changeOrigin</a>，用到的地方在这里 —— <a href="https://github.com/http-party/node-http-proxy/blob/9b96cd725127a024dabebec6c7ea8c807272223d/lib/http-proxy/passes/web-incoming.js#L126">Request initalization</a></p><pre><code class="language-javascript">// requires-port是判断指定端口在当前协议下是否要求添加在 host 后面，如果是协议默认的端口就不用添加，例如HTTP默认80，会返回false
+var required = require(&#x27;requires-port&#x27;);
+
+if (options.changeOrigin) {
+  outgoing.headers.host =
+    required(outgoing.port, options[forward || &#x27;target&#x27;].protocol) &amp;&amp;
+    !hasPort(outgoing.host)
+      ? outgoing.host + &#x27;:&#x27; + outgoing.port
+      : outgoing.host;
+}
+</code></pre><p>设置<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Host"><code>request.header.host</code></a>到底有啥用呢？首先在 HTTP 1.1 的时候要求必须设置这个请求头参数，因为部分网站的部署是<a href="https://en.wikipedia.org/wiki/Virtual_hosting#Name-based">基于域名</a>的部署方案，也就是一个后台服务器的 IP 地址绑定多个域名，这很容器做到，只需要在域名管理机构的 DNS 解析处添加域名解析规则即可。</p><p>基于域名的部署方案取决于支持 HTTP 1.1 的浏览器能够在请求域名绑定的 IP 地址的时候发送<code>host</code>这个请求头参数，以标识当前请求的是什么域名，不然即使是不同域名，服务器接收到的都是相同的 IP 地址，仍然无法区分。</p><p>但是基于域名部署的方案最大问题是难以托管多个 HTTPS 的网站，因为在建立正式的 TCP 连接前，需要通过 TCP 进行一段 SSL/TLS 的握手过程，来验证双方身份，这边还没发送<code>host</code>呢，SSL/TLS 已经开始了。TLS 提供了一种拓展方法 <a href="https://en.wikipedia.org/wiki/Server_Name_Indication">SNI</a> 来保证握手开始前将请求域名发送到服务器，这样就可以让服务器明确知道对方是谁，发送什么样的证书给它。</p><p>所以在请求<code>https</code>协议的网站时，一定要配置<code>changeOrigin</code>这个请求头，不然就会出现以下错误：</p><p><img src="../public/images/image-20201220183752961.png" alt="image-20201220183752961"/></p><h2>实践</h2><p>比如现在本地我要把知乎专栏《阿里妈妈前端快爆》的内容抓取下来，首先看一下请求是啥，大致是这个地址：</p><pre><code class="language-javascript">Request URL: https://www.zhihu.com/api/v4/columns/mm-fe/items?limit=10&amp;offset=10
+</code></pre><p><img src="../public/images/image-20201220190635496.png" alt="image-20201220190635496"/></p><p>那么我本地<code>webpack</code>的 WDS 可以这样配置：</p><pre><code class="language-javascript">    proxy: {
+      &quot;/api&quot;: {
+        target: &quot;https://www.zhihu.com&quot;,
+        changeOrigin: true,
+        pathRewrite: {
+          &quot;^/api&quot;: &quot;/api/v4/columns/mm-fe/items&quot;, // rewrite path
+        },
+      },
+    },
+</code></pre><p>请求的地址是<code>/api?limit=10&amp;offset=20</code>：</p><pre><code class="language-javascript">fetch(&#x27;/api?limit=10&amp;offset=20&#x27;)
+  .then(function(response) {
+    return response.json();
+  })
+  .then(function(myJson) {
+    console.log(myJson);
+  });
+</code></pre><p>这样就可以成功转发请求获取数据了，可以看到这样一种重写 URL 的方式首先根据<code>/api</code>匹配请求 URL，如果包含则使用<code>target</code>定义的路径重写<code>host</code>，最后根据<code>pathRewrite</code>重写 URL 中的<code>path</code>部分，得到最后的 URL 为：</p><pre><code>URL = target + pathRewrite + queryString + hash
+</code></pre><p><img src="../public/images/image-20201220191120749.png" alt="image-20201220191120749"/></p><p><img src="../public/images/image-20201220191129915.png" alt="image-20201220191129915"/></p><h3>通用配置</h3><p>在实际使用过程中，针对<code>pathRewrite</code>这样配置：</p><pre><code class="language-javascript">    proxy: {
+      &#x27;/api&#x27;: {
+        target: &#x27;http://localhost:3000&#x27;,
+        changeOrigin: true,
+        pathRewrite: {
+          &#x27;^/api&#x27;: &#x27;/&#x27;,
+        },
+      },
+    },
+</code></pre><p>这样在项目中请求的 URL 都是这种形式，以达到通用性：</p><pre><code class="language-javascript">fetch(&#x27;/api/xxx?name=xxx&#x27;)
+  .then(res =&gt; res.json())
+  .then(res =&gt; console.log(res));
+</code></pre>]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[编写vscode插件]]></title>
+            <link>https://tommyhu.me/2022/01/03/如何编写vscode插件</link>
+            <guid>/2022/01/03/如何编写vscode插件</guid>
+            <pubDate>Mon, 03 Jan 2022 00:00:00 GMT</pubDate>
+            <description><![CDATA[官方脚手架]]></description>
+            <content:encoded><![CDATA[<h2>官方脚手架</h2><p>vscode 官方提供了一套基于 <a href="https://yeoman.io/">yeoman</a>  的脚手架，通过以下命令就可以生成一套可用的 vscode 插件代码：</p><pre><code class="language-shell">npm install -g yo generator-code
+
+yo code
+</code></pre><h3>配置项</h3><p>vscode 通过<code>package.json</code>暴露出很多配置项：</p><ul><li><p><code>name</code>和<code>publisher</code>：<code>name</code>通常是插件代码的仓库名称，<code>publisher</code>则是开发者，vscode 使用<code>&lt;publisher&gt;.&lt;name&gt;</code>来给定一个插件一个唯一的标识 ID；</p></li><li><p><code>main</code>：插件入口程序，如果是 TS 开发，则是编译后的代码；</p></li><li><p><code>activationEvents</code>：指定插件激活事件</p></li><li><p><code>contributes</code>：指定插件能力</p></li><li><p><code>engines.vscode</code>：指定插件依赖的 vscode 的版本</p></li><li><p>其他的还有这些 —— <a href="https://code.visualstudio.com/api/references/extension-manifest">Extension Manifest | Visual Studio Code Extension API</a></p></li></ul><h2>插件能力</h2><p>vscode 插件需要通过<code>package.json</code>的<code>contributes</code>属性来指定多种插件能力，所有的注册能力在这里 —— <a href="https://code.visualstudio.com/api/references/contribution-points">Contribution Points | Visual Studio Code Extension API</a></p><p>一般来说常用的有以下这些：</p><ul><li><a href="https://code.visualstudio.com/api/references/vscode-api#commands">注册 vscode 命令</a></li></ul><pre><code class="language-json">{
+  &quot;contributes&quot;: {
+    &quot;commands&quot;: [
+      {
+        &quot;command&quot;: &quot;extension.sayHello&quot;,
+        &quot;title&quot;: &quot;Hello World&quot;
+      }
+    ]
+  }
+}
+</code></pre><ul><li><a href="https://code.visualstudio.com/api/references/contribution-points#contributes.configuration">配置插件</a></li></ul><pre><code class="language-json">{
+  &quot;contributes&quot;: {
+    &quot;configuration&quot;: {
+      &quot;title&quot;: &quot;TypeScript&quot;,
+      &quot;properties&quot;: {
+        &quot;typescript.useCodeSnippetsOnMethodSuggest&quot;: {
+          &quot;type&quot;: &quot;boolean&quot;,
+          &quot;default&quot;: false,
+          &quot;description&quot;: &quot;Complete functions with their parameter signature.&quot;
+        },
+        &quot;typescript.tsdk&quot;: {
+          &quot;type&quot;: [&quot;string&quot;, &quot;null&quot;],
+          &quot;default&quot;: null,
+          &quot;description&quot;: &quot;Specifies the folder path containing the tsserver and lib*.d.ts files to use.&quot;
+        }
+      }
+    }
+  }
+}
+</code></pre><ul><li><a href="https://code.visualstudio.com/api/references/contribution-points#contributes.keybindings">按键绑定</a></li></ul><pre><code class="language-json">{
+  &quot;contributes&quot;: {
+    &quot;keybindings&quot;: [
+      {
+        &quot;command&quot;: &quot;extension.sayHello&quot;,
+        &quot;key&quot;: &quot;ctrl+f1&quot;,
+        &quot;mac&quot;: &quot;cmd+f1&quot;,
+        &quot;when&quot;: &quot;editorTextFocus&quot;
+      }
+    ]
+  }
+}
+</code></pre><ul><li><a href="https://code.visualstudio.com/api/references/contribution-points#contributes.menus">鼠标菜单</a></li><li><a href="https://code.visualstudio.com/api/extension-capabilities/common-capabilities#data-storage">数据存储</a></li><li><a href="https://code.visualstudio.com/api/extension-capabilities/common-capabilities#quick-pick">输入提示</a></li></ul><h2>激活事件</h2><p>vscode 通过<code>package.json</code>中指定的<code>activationEvents</code>属性来定义插件激活事件，当指定的<code>activationEvents</code>发生时便会运行插件程序。</p><p>有以下类型的事件：</p><ul><li><code>onLanguage</code>：当 vscode 打开某一类型的文件时触发，可以指定的多个文件类型</li></ul><pre><code class="language-json">&quot;activationEvents&quot;: [
+    &quot;onLanguage:json&quot;,
+    &quot;onLanguage:markdown&quot;,
+    &quot;onLanguage:typescript&quot;
+]
+</code></pre><ul><li><code>onCommand</code>：当 vscode 执行某一命令时触发</li></ul><pre><code class="language-json">  &quot;activationEvents&quot;: [
+    &quot;onCommand:vs-tvt.helloWorld&quot;
+  ]
+
+// 当运行 helloWorld 时激活 vs-tvt
+</code></pre><ul><li><code>onDebug</code>：启动 vscode 调试时触发</li><li><code>workspaceContains</code>：当打开文件夹并且含有匹配（<code>glob</code>模式匹配）的文件时触发</li></ul><pre><code class="language-json">&quot;activationEvents&quot;: [
+    &quot;workspaceContains:**/.editorconfig&quot;
+]
+</code></pre><ul><li><code>onFileSystem</code>：以某种协议打开文件时触发</li></ul><pre><code class="language-json">&quot;activationEvents&quot;: [
+    &quot;onFileSystem:sftp&quot;
+]
+</code></pre><ul><li><code>*</code>：当 vscode 启动时触发，会导致 vscode 启动变慢</li></ul><pre><code class="language-json">&quot;activationEvents&quot;: [
+    &quot;*&quot;
+]
+</code></pre><ul><li><code>onStartupFinished</code>：当 vscode 启动完成后触发</li></ul><pre><code class="language-json">&quot;activationEvents&quot;: [
+    &quot;onStartupFinished&quot;
+]
+</code></pre>]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[Promise A+规范的实现]]></title>
+            <link>https://tommyhu.me/2022/01/02/Promise A+规范的实现</link>
+            <guid>/2022/01/02/Promise A+规范的实现</guid>
+            <pubDate>Sun, 02 Jan 2022 00:00:00 GMT</pubDate>
+            <description><![CDATA[Promise/A+]]></description>
+            <content:encoded><![CDATA[<h2>Promise/A+</h2><blockquote><p><a href="https://promisesaplus.com/#terminology">https://promisesaplus.com/#terminology</a></p></blockquote><h3>Promise 对象</h3><ul><li>一个对象或者函数，并且带有<code>then</code>方法</li><li>一个当前状态<code>state</code>，可以是<code>pending</code>、<code>fulfilled</code>和<code>rejected</code>，且<code>fulfilled</code>和<code>rejected</code>不可被改变</li><li>一个<code>resolve</code>值<code>value</code>，可以是任何 JS 值的形式</li><li>一个执行<code>reject</code>的原因<code>reason</code></li></ul><h3>then 方法</h3><blockquote><p><code>newPromise = promise.then(onFulfilled, onRejected)</code></p></blockquote><p><code>then</code>方法接收两个参数，且必须都是函数，否则忽略该参数</p><ul><li><code>onFulfilled</code>：当前 Promise 对象的状态变成<code>fulfilled</code>以后执行，并且将<code>value</code>作为第一个参数，并且只允许执行一次</li><li><code>onRejected</code>：当前 Promise 对象的状态变成<code>rejected</code>以后执行，并且将<code>reason</code>作为第一个参数，并且只允许执行一次</li><li><code>onFulfilled</code>和<code>onRejected</code>必须在当前宏任务执行完以后才能执行，也就是异步的需求</li><li><code>then</code>执行完<strong>返回一个新的 Promise 对象</strong><code>newPromise</code>：<ul><li>如果<code>onFulfilled</code>或者<code>onRejected</code>返回新的值<code>x</code>，则执行下文的方法<code>Resolve(newPromise, x)</code></li><li>如果<code>onFulfilled</code>或者<code>onRejected</code>执行抛出异常<code>e</code>，<code>promise2</code>也必须<code>reject(e)</code></li><li>如果<code>onFulfilled</code>不是函数（未提供），则当<code>promise</code>状态变成<code>fulfilled</code>的时候，<code>newPromise</code>内部状态也要变成<code>fulfilled</code>并以<code>promise</code>内部的<code>value</code>执行<code>resolve</code>；同理<code>onRejected</code>也是</li></ul></li><li>同一个 Promise 对象的<code>then</code>方法可能调用多次<ul><li>并且各自<code>onFulfilled</code>或者<code>onRejected</code>回调必须按照调用<code>then</code>的顺序依次执行</li></ul></li></ul><h3>Resolve(promise, x)</h3><p><code>Resolve(promise, x)</code>这里是描述<code>then</code>执行以后的算法判断，也就是<code>then</code>的反复执行过程，这是一个特殊的内部方法，是处理<code>then</code>链式执行的算法；</p><ul><li>如果<code>promise === x</code>，直接<code>reject promise</code>并返回<code>TypeError</code>的错误；</li><li>如果<code>x</code>是一个 Promise 对象，则当前 Promise 对象<code>promise</code>的状态必须和<code>x</code>同步；</li><li>如果<code>x</code>是一个对象或者函数：<ul><li>判断其是否具有<code>then</code>方法；</li><li>如果没有，则<code>reject</code>；</li><li>如果具有<code>then</code>，则使用<code>x</code>作为<code>then</code>内部的<code>this</code>执行<code>then</code>，第一个参数传递<code>resolvePromise</code>，第二个参数传递<code>rejectPromise</code><ul><li>当<code>resolvePromise</code>被传递参数<code>y</code>调用的时候，执行<code>Resolve(promise, y)</code></li><li>当<code>rejectPromise</code>被传递参数<code>r</code>调用的时候，则<code>promise</code>也<code>reject</code></li><li>如果<code>resolvePromise</code>和<code>rejectPromise</code>都被调用了，或者被多次调用，首次调用优先执行，后续被忽略；</li><li>如果执行<code>then</code>抛出异常，当<code>resolvePromise</code>或者<code>rejectPromise</code>被调用了，则忽略；否则<code>reject</code>顶层的<code>promise</code></li></ul></li></ul></li><li>如果<code>x</code>不满足上述条件，<code>promise</code>直接<code>fulfilled</code></li></ul><h2>实现</h2><p>如果按照 promise-aplus 的算法慢慢摸索就可以直接实现一个完整的 Promise</p><h3>初始化</h3><p>Promise 对象在初始化以后，具有以上提到的<code>value</code>，<code>state</code>以及<code>reason</code>等状态值</p><pre><code class="language-js">class APromise {
+  constructor(fn) {
+    if (typeof fn !== &#x27;function&#x27;) {
+      throw new TypeError(&#x27;init parameter must be a function&#x27;);
+    }
+
+    this.state = &#x27;pending&#x27;;
+    this.value = null;
+    this.reason = null;
+
+    try {
+      fn(this.resolve, this.reject);
+    } catch (e) {
+      this.reject(e);
+    }
+  }
+
+  resolve(value) {
+    setTimeout(() =&gt; {
+      if (this.state === &#x27;pending&#x27;) {
+        this.state = &#x27;fulfilled&#x27;;
+        this.value = value;
+      }
+    });
+  }
+
+  reject(reason) {
+    setTimeout(() =&gt; {
+      if (this.state === &#x27;pending&#x27;) {
+        this.state = &#x27;rejected&#x27;;
+        this.reason = reason;
+      }
+    });
+  }
+}
+</code></pre><h3>then</h3><p>在上述代码的基础上，添加<code>then</code>方法，因为<code>then</code>方法可能被调用多次，所以我们需要额外定义两个队列保存在 Promise 状态发生变化以后的回调函数<code>onFulfilled</code>或<code>onRejected</code>，这里做一个参数非函数类型的简单化处理，这样只需要考虑函数的回调形式，毕竟日常开发也不会传递其他类型的参数</p><pre><code class="language-js">class APromise {
+  constructor(fn) {
+    this.state = &#x27;pending&#x27;;
+    this.value = null;
+    this.reason = null;
+    this.fulfilledQue = [];
+    this.rejectedQue = [];
+
+    fn(this.resolve, this.reject);
+  }
+
+  then = (onFulfilled, onRejected) =&gt; {
+    this.fulfilledQue.push(
+      typeof onFulfilled === &#x27;function&#x27; ? onFulfilled : value =&gt; value,
+    );
+
+    this.rejectedQue.push(
+      typeof onRejected === &#x27;function&#x27;
+        ? onRejected
+        : reason =&gt; {
+            throw reason;
+          },
+    );
+  };
+}
+</code></pre><p>然后<code>then</code>方法返回一个新的 Promise 对象<code>newPromise</code>，并且这个新的 Promise 对象和当前 Promise 的状态保持同步，所以在<code>then</code>内部需要判断当前 Promise 的状态来进行不同的处理：</p><ul><li>如果是<code>fulfilled</code>状态，则表明当前 Promise 已经执行了<code>resolve</code>，所以应该以当前 Promise 的<code>value</code>异步执行<code>onFulfilled</code>，并把当前 Promise 的<code>value</code>传递下去；<code>rejected</code>状态同理</li><li>而如果当前 Promise 状态是<code>pending</code>，那么应该将<code>onFulfilled</code>或<code>onRejected</code>推到回调函数中去，等待状态改变的时候自动调用</li></ul><pre><code class="language-js">then = (onFulfilled, onRejected) =&gt; {
+  onFulfilled =
+    typeof onFulfilled === &#x27;function&#x27; ? onFulfilled : value =&gt; value;
+  onRejected =
+    typeof onRejected === &#x27;function&#x27;
+      ? onRejected
+      : reason =&gt; {
+          throw reason;
+        };
+  const newPromise = new APromise((resolve, reject) =&gt; {
+    if (this.state === &#x27;fulfilled&#x27;) {
+      // https://promisesaplus.com/#point-43
+      // 这里直接异步执行回调函数，保证返回的 Promise 状态和当前 Promise 状态一致
+      setTimeout(() =&gt; {
+        try {
+          const x = onFulfilled(this.value);
+          this.resolvePromise(newPromise, x, resolve, reject);
+        } catch (e) {
+          reject(e);
+        }
+      });
+    }
+
+    if (this.state === &#x27;rejected&#x27;) {
+      setTimeout(() =&gt; {
+        try {
+          const x = onRejected(this.reason);
+          this.resolvePromise(newPromise, x, resolve, reject);
+        } catch (e) {
+          reject(e);
+        }
+      });
+    }
+
+    // 如果当前 Promise 状态
+    if (this.state === &#x27;pending&#x27;) {
+      this.fulfilledQue.push(value =&gt; {
+        try {
+          const x = onFulfilled(value);
+          this.resolvePromise(newPromise, x, resolve, reject);
+        } catch (e) {
+          reject(e);
+        }
+      });
+
+      this.rejectedQue.push(reason =&gt; {
+        try {
+          const x = onRejected(reason);
+          this.resolvePromise(newPromise, x, resolve, reject);
+        } catch (e) {
+          reject(e);
+        }
+      });
+    }
+  });
+
+  return newPromise;
+};
+</code></pre><p>然后我们需要在 Promise 状态发生改变的时候调用<code>onFulfilled</code>或<code>onRejected</code>，可以在原来的<code>resolve</code>和<code>reject</code>基础上进行补充，这里<a href="https://promisesaplus.com/#point-67">使用<code>setTimeout</code>模拟异步实现</a>的方式</p><pre><code class="language-js">resolve = value =&gt; {
+  setTimeout(() =&gt; {
+    if (this.state === &#x27;pending&#x27;) {
+      this.state = &#x27;fulfilled&#x27;;
+      this.value = value;
+      this.fulfilledQue.forEach(cb =&gt; {
+        cb(this.value);
+      });
+    }
+  });
+};
+
+reject = reason =&gt; {
+  setTimeout(() =&gt; {
+    if (this.state === &#x27;pending&#x27;) {
+      this.state = &#x27;rejected&#x27;;
+      this.reason = reason;
+      this.rejectedQue.forEach(cb =&gt; {
+        cb(this.reason);
+      });
+    }
+  });
+};
+</code></pre><h3>resolvePromise</h3><p><code>resolvePromise</code>的实现相对简单一点，直接按照规范定义一步一步来即可</p><pre><code class="language-js">resolvePromise = (promise, x, resolve, reject) =&gt; {
+  // https://promisesaplus.com/#point-48
+  // 如果then提供的onFulfilled或者onRejected函数执行返回的值和then返回的是同一个promise，会导致下文this.resolvePromise重复调用，形成死循环
+  if (promise === x) {
+    reject(
+      new TypeError(
+        &#x27;then must return a different promise with fulfilled callback&#x27;,
+      ),
+    );
+  }
+
+  // https://promisesaplus.com/#point-49
+  // 如果是一个 Promise，需要判断其状态，并同步到后续的 Promise
+  if (x instanceof APromise) {
+    // https://promisesaplus.com/#point-50
+    if (x.state === &#x27;pending&#x27;) {
+      x.then(
+        value =&gt; {
+          this.resolvePromise(promise, value, resolve, reject);
+        },
+        reason =&gt; {
+          reject(reason);
+        },
+      );
+    } else {
+      // https://promisesaplus.com/#point-51
+      x.then(resolve, reject);
+    }
+  } else if (typeof x === &#x27;function&#x27; || (typeof x === &#x27;object&#x27; &amp;&amp; x !== null)) {
+    // https://promisesaplus.com/#point-53
+    // thenable 函数
+    let then;
+    // https://promisesaplus.com/#point-59
+    // 保证x.then提供的回调函数只会被执行一次
+    let hasBeenResolved = false;
+    try {
+      then = x.then;
+      // https://promisesaplus.com/#point-56
+      if (typeof then === &#x27;function&#x27;) {
+        then.call(
+          x,
+          y =&gt; {
+            if (!hasBeenResolved) {
+              hasBeenResolved = true;
+              // https://promisesaplus.com/#point-57
+              this.resolvePromise(promise, y, resolve, reject);
+            }
+          },
+          r =&gt; {
+            if (!hasBeenResolved) {
+              hasBeenResolved = true;
+              reject(r);
+            }
+          },
+        );
+      } else {
+        // https://promisesaplus.com/#point-63
+        resolve(x);
+      }
+    } catch (e) {
+      // https://promisesaplus.com/#point-60
+      if (!hasBeenResolved) {
+        reject(e);
+      }
+    }
+  } else {
+    // https://promisesaplus.com/#point-64
+    resolve(x);
+  }
+};
+</code></pre><h3>测试</h3><p>使用 promise-aplus 规范提供的<a href="https://github.com/promises-aplus/promises-tests">promises-tests</a>进行测试，在原有代码上暴露以下入口方法，然后使用 cjs 语法导出即可</p><pre><code class="language-js">/**
+ * 测试入口
+ */
+APromise.defer = APromise.deferred = function() {
+  let dfd = {};
+  dfd.promise = new APromise((resolve, reject) =&gt; {
+    dfd.resolve = resolve;
+    dfd.reject = reject;
+  });
+  return dfd;
+};
+</code></pre><p>执行<code>promises-aplus-tests</code>，可以看到完美通过 872 个测试用例。</p>]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[meta标签]]></title>
+            <link>https://tommyhu.me/2022/01/02/meta标签</link>
+            <guid>/2022/01/02/meta标签</guid>
+            <pubDate>Sun, 02 Jan 2022 00:00:00 GMT</pubDate>
+            <description><![CDATA[head]]></description>
+            <content:encoded><![CDATA[<h2>head</h2><p><code>head</code>标签是在 HTML 的根元素<code>html</code>里的第一个标签，它的内容如下：</p><ul><li>允许包含一个<code>title</code>标签，表示文档的标题，显示在浏览器的标签栏上；如果时<code>iframe</code>则可以允许不包含<code>title</code>标签</li></ul><pre><code class="language-html">&lt;head&gt;
+  &lt;title&gt;My test page&lt;/title&gt;
+&lt;/head&gt;
+</code></pre><ul><li>最多只能包含一个<code>base</code>标签，给页面上所有的 URL 相对地址提供一个基础路径，因此它会影响全局的链接地址。<code>base</code>是一个非常危险的标签，容易造成跟 JavaScript 的配合问题</li><li><code>meta</code>标签</li></ul><pre><code class="language-html">&lt;base target=&quot;_top&quot; href=&quot;http://www.example.com/&quot;&gt;
+</code></pre><ul><li><code>link</code>标签，规定了当前文档与外部资源的关系，例如标识<code>favicon</code>，<code>css</code>等静态资源</li></ul><pre><code class="language-html">&lt;link rel=&quot;icon&quot; href=&quot;favicon.ico&quot;&gt;
+
+&lt;link rel=&quot;stylesheet&quot; href=&quot;my-css-file.css&quot;&gt;
+</code></pre><ul><li><code>style</code>，即直接指定的<code>CSS</code>样式表</li></ul><pre><code class="language-html">&lt;head&gt;
+  &lt;style&gt;
+    h1 {color:red;}
+    p {color:blue;}
+  &lt;/style&gt;
+&lt;/head&gt;
+</code></pre><ul><li><code>script</code>标签，但是一般不会至于<code>head</code>中，如果要放在<code>head</code>中一般需要使用<code>async</code>来异步加载资源</li></ul><h2>link 标签</h2><p><code>link</code>一般用于指定网页的<code>favicon</code>和<code>css</code>资源，其具有以下属性：</p><ul><li><p><code>crossorigin</code>：指定在加载相关资源时是否必须使用 CORS，例如图片加载，它的值可以是以下两种:</p><ul><li><code>&quot;anonymous&quot;</code>：会发起一个跨域请求(即包含 <code>Origin:</code> HTTP 头)，但是不会发送任何客户端信息（<code>cookie</code>，<code>HTTP Authorization</code>请求头），如果服务端没有设置<code>Access-Control-Allow-Origin</code>响应头，则资源会被限制访问</li><li><code>&quot;use-credentials&quot;</code>：发起跨域请求的同时发送认证信息，如果服务端没有设置<code>Access-Control-Allow-Origin</code>响应头，则资源会被限制访问</li><li>如果未设置<code>crossorigin</code>，那么图片会被禁止在<code>canvas</code>等元素中使用</li></ul></li><li><p><code>rel</code>：表示外部资源和当前 HTML 文档的关系，它的值可以是<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTML/Link_types">链接类型</a>中指定的值，例如常见的有：</p><ul><li><code>stylesheet</code>：<code>CSS</code>样式表文件</li><li><code>alternate</code>备用资源，可以是<code>CSS</code>，或者一份<code>HTML</code>，例如更换主题的网页可以使用<code>alternate</code>备用一份<code>CSS</code></li><li><code>icon</code>，HTML 文档的<code>favicon</code></li><li><code>preload</code>：指定预加载资源，可以配合使用 <code>as</code> 来指定将要预加载的内容的类型，具体见<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTML/Preloading_content#%E5%93%AA%E4%BA%9B%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%86%85%E5%AE%B9%E5%8F%AF%E4%BB%A5%E8%A2%AB%E9%A2%84%E5%8A%A0%E8%BD%BD%EF%BC%9F">哪些类型的内容可以被预加载？</a></li><li><code>prefetch</code>：建议浏览器提前获取链接的资源，因为它很可能会被用户请求</li></ul></li><li><p><code>href</code>：外部资源的链接地址，可以是绝对路径或者相对路径</p></li><li><p><code>type</code>：指定链接内容的 MIME 类型，最常用的就是<code>text/html</code>，<code>text/css</code></p></li></ul><pre><code class="language-html">&lt;link rel=&quot;preload&quot; as=&quot;font&quot; type=&quot;font/woff2&quot; crossorigin=&quot;&quot; href=&quot;/static/media/ZillaSlab-Bold.subset.0beac26b.woff2&quot;&gt;
+
+&lt;link rel=&quot;alternate&quot; title=&quot;&lt;head&gt;标签里有什么? Metadata-HTML中的元数据&quot; href=&quot;https://developer.mozilla.org/zh-CN/docs/learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML&quot; hreflang=&quot;zh&quot;&gt;
+&lt;link rel=&quot;alternate&quot; title=&quot;What’s in the head? Metadata in HTML&quot; href=&quot;https://developer.mozilla.org/en-US/docs/Learn/HTML/Introduction_to_HTML/The_head_metadata_in_HTML&quot; hreflang=&quot;en&quot;&gt;
+
+&lt;link href=&quot;/static/css/main.d00647ab.chunk.css&quot; rel=&quot;stylesheet&quot;&gt;
+</code></pre><h2>meta 标签</h2><p><code>meta</code>标签是一组键值对，是一种通用的元信息表示标签，也就是描述当前 HTML 文档的除了<code>link</code>，<code>title</code>等无法表示的信息。</p><h3>name 和 content</h3><p><code>meta</code>可以由<code>name</code>和<code>content</code>两个键值对组成，<code>name</code>和<code>content</code>属性可以一起使用，以键值对的方式给文档提供元数据，其中<code>name</code>的值作为元数据的名称，<code>content</code> 的值作为元数据的值。</p><p>HTML 规范中定义了以下标准的元数据名称，可以指定给<code>name</code>：</p><ul><li><p><code>application-name</code>：网页中所运行的应用程序的名称</p></li><li><p><code>author</code>：文档作者的名字。</p></li><li><p><code>description</code>：一段简短而精确的、对页面内容的描述。一些浏览器，比如 Firefox 和 Opera，将其用作书签的默认描述。</p></li><li><p><code>generator</code>：生成此页面的软件的标识符（identifier）。</p></li><li><p><code>keywords</code>：与页面内容相关的关键词，使用逗号分隔。</p></li><li><p><code>referrer</code>：控制由当前文档发出的请求的 HTTP <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Referer"><code>Referer</code></a> 请求头。</p></li><li><p><code>theme-color</code>：页面风格颜色，实际并不会影响页面，但是浏览器可能据此调整页面之外的 UI（如窗口边框或者 tab 的颜色）。<code>content</code> 属性应当包含一个有效的 CSS 颜色值（十六进制，渐变色，或者颜色关键字等）</p></li></ul><h3>charset</h3><p>从 HTML5 开始，为了简化写法，<code>meta</code>标签新增了<code>charset</code>属性，用来描述 HTML 文档自身的编码格式。添加了 <code>charset</code> 属性的 <code>meta</code> 标签无需再有 <code>name</code>和<code>content</code>。指定<code>charset</code>的<code>meta</code>通常放在<code>head</code>的第一个。</p><pre><code>&lt;meta charset=&quot;UTF-8&quot; &gt;
+</code></pre><h3>http-equiv</h3><p>具有 <code>http-equiv</code> 属性的 <code>meta</code> 标签，表示执行一个命令，这样的 <code>meta</code> 标签可以不需要 <code>name</code> 属性。例如下面一段代码相当于指定<code>content-type</code>这个 HTTP 首部，并且指定了 HTTP 编码方式</p><pre><code>&lt;meta http-equiv=&quot;content-type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+</code></pre><p>除了<code>content-type</code>，还有以下几种命令：</p><ul><li><p><code>content-language</code>指定内容的语言；</p></li><li><p><code>default-style</code>指定默认样式表；</p></li><li><p><code>refresh</code>刷新；</p></li><li><p><code>set-cookie</code>模拟 HTTP 响应头 <code>set-cookie</code>，设置 cookie；</p></li><li><p><code>x-ua-compatible</code> 模拟 HTTP 头 <code>x-ua-compatible</code>，声明 ua 兼容性；</p></li><li><p><code>content-security-policy</code> 模拟 HTTP 头 <code>content-security-policy</code>，声明内容安全策略</p></li></ul><h3>viewport</h3><p><code>viewport</code>并未由标准定义，但是移动端开发必须使用，其表示移动端网页物理像素和逻辑像素的缩放逻辑。其属性值是一个很复杂的结构，用逗号分隔的键值对，键值对可以是以下几种：</p><ul><li><p><code>width</code>：页面宽度，可以取值具体的数字，也可以是 device-width，表示跟设备宽度相等。</p></li><li><p><code>height</code>：页面高度，可以取值具体的数字，也可以是 device-height，表示跟设备高度相等。</p></li><li><p><code>initial-scale</code>：初始缩放比例。</p></li><li><p><code>minimum-scale</code>：最小缩放比例。</p></li><li><p><code>maximum-scale</code>：最大缩放比例。</p></li><li><p><code>user-scalable</code>：是否允许用户缩放。</p></li></ul><p>对于已经做好了移动端适配的网页，应该把用户缩放功能禁止掉，宽度设为设备宽度，一个标准的指定<code>viewport</code>的<code>meta</code>如下：</p><pre><code>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no&quot;&gt;
+</code></pre><h3>SEO</h3><p><code>meta</code>标签另外一个最大的用处就是进行网站的<code>SEO</code>（Search engine optimization，搜索引擎优化）。这其中常用的属性为：</p><ul><li><code>author</code>：文档作者的名字。</li><li><code>description</code>：一段简短而精确的、对页面内容的描述。一些浏览器，比如 Firefox 和 Opera，将其用作书签的默认描述。</li><li><code>generator</code>：生成此页面的软件的标识符（identifier）。</li><li><code>keywords</code>：与页面内容相关的关键词，使用逗号分隔。</li></ul>]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[monorepo]]></title>
+            <link>https://tommyhu.me/2022/01/02/monorepo</link>
+            <guid>/2022/01/02/monorepo</guid>
+            <pubDate>Sun, 02 Jan 2022 00:00:00 GMT</pubDate>
+            <description><![CDATA[monorepo]]></description>
+            <content:encoded><![CDATA[<h2>monorepo</h2><h3>什么是 monorepo</h3><p><code>monorepo</code>这个词是<code>meno</code>和<code>repo</code>两个缩写词的组合，<code>meno</code>是更少的意思，<code>repo</code>是<code>repository</code>的缩写，也就是仓库，合起来就是使用更少的仓库来进行版本管理控制，将所有项目都放在一个代码仓库进行管理。</p><p>截止到目前，主流的前端开源项目基本全部使用<code>monorepo</code>，例如<code>react</code>，<code>vue</code>，<code>babel</code>等。</p><h3>为什么要使用 monorepo</h3><p>使用<code>monorepo</code>有以下好处：</p><ul><li>代码复用更简单，<strong>类似的功能或通信协议可以抽象到共享库中</strong>，而不需要依赖包管理器；</li><li>原子级别的提交使得不同项目版本管理更加方便，例如<code>babel</code>内部包含<code>@babel/parser</code>，<code>@babel/traverse</code>等许多子项目，这些模块同时修改都在一个仓库代码内，修改完一次提交就行了；</li><li>避免重复安装第三方依赖，在大型项目中肯定会使用大量第三方依赖包，这些包的版本管理和安装需要不断重复进行，而<code>monorepo</code>内部只需要管理和安装一次，其他<code>package</code>都可以共享；</li><li>跨团队协作更加方便，由于代码都在一个仓库内部，所以基本没有权限限制，大家都可以参与和维护</li></ul><p>不过，使用<code>monorepo</code>也有一些不便：</p><ul><li><code>package</code>划分的粒度不好控制，这一般取决于架构的水平</li><li>随着不同项目的进行，整个<code>monorepo</code>会越来越大</li><li>权限控制没有<code>multirepo</code>那样精细到项目</li><li>团队协作导致的修改可能因为沟通不及时的问题而影响很多面，不过这都是开发者不规范使用的问题</li></ul><h2>lerna</h2><blockquote><p>lerna 是一个工具，它优化了使用 git 和 npm 管理多包存储库的工作流。</p></blockquote><p>在<code>lerna</code>架构中，每个单独的项目都是放在<code>package</code>目录的子文件夹下进行管理，每个<code>package</code>内部都有管理自身配置项的<code>package.json</code>文件，依赖也都会安装在各个<code>package</code>文件夹内的<code>node_modules</code>内部。</p><h3>使用</h3><p>使用<code>lerna</code>需要全局安装 CLI 工具</p><pre><code class="language-bash">yarn global add lerna
+
+lerna init
+
+lerna bootstrap
+
+lerna publish
+</code></pre><p><img src="../public/images/image-20211212143303117.png" alt="image-20211212143303117"/></p><h3>版本控制</h3><p><code>lerna</code>提供两种版本控制的方式：</p><ol><li>一种是所有项目固定使用一个版本号，位于<code>monorepo</code>内部的<code>lerna.json</code>内部指定的<code>version</code>，这样就会导致执行<code>lerna publish</code>会更新所有<code>package</code>的版本号；</li><li>另一种是使用<code>lerna init --independent</code>创建的项目，可以独立管理每个<code>package.json</code>内部的版本号，每次执行<code>lerna publish</code>的时候，可以单独选择每个修改过的<code>package</code>内部的版本号。</li></ol><h3>配置项</h3><p>在<code>lerna.json</code>中可以指定以下配置项：</p><pre><code class="language-json">{
+  &quot;version&quot;: &quot;1.1.3&quot;,
+  &quot;npmClient&quot;: &quot;npm&quot;,
+  &quot;command&quot;: {
+    &quot;publish&quot;: {
+      &quot;ignoreChanges&quot;: [&quot;ignored-file&quot;, &quot;*.md&quot;],
+      &quot;message&quot;: &quot;chore(release): publish&quot;,
+      &quot;registry&quot;: &quot;https://npm.pkg.github.com&quot;
+    },
+    &quot;bootstrap&quot;: {
+      &quot;ignore&quot;: &quot;component-*&quot;,
+      &quot;npmClientArgs&quot;: [&quot;--no-package-lock&quot;]
+    }
+  },
+  &quot;packages&quot;: [&quot;packages/*&quot;]
+}
+</code></pre><ul><li><code>version</code>：版本号，指定为<code>independent</code>表示每个<code>package</code>单独管理</li><li><code>npmClient</code>：使用<code>npm</code>还是<code>yarn</code>安装依赖</li><li><code>command.publish.ignoreChanges</code>：忽略以某些文件修改导致的发布更新，使用<code>glob</code>模式</li><li><code>command.publish.message</code>：执行发布的提交信息</li><li><code>command.publish.registry</code>：发布源</li><li><code>command.bootstrap.ignore</code>：取消引导安装依赖的文件</li><li><code>command.bootstrap.npmClientArgs</code>：执行<code>lerna bootstrap</code>时传递给<code>npm install</code>或者<code>yarn install</code>命令的参数</li><li><code>command.bootstrap.scope</code>：限制<code>lerna bootstrap</code>引导的<code>package</code></li><li><code>packages</code>：指定<code>lerna package</code>目录，默认就是<code>packages</code>文件夹</li><li><code>useWorkspaces</code>：是否使用<code>yarn workspace</code>，如果开启需要在仓库根目录下的<code>package.json</code>指定<code>workspaces</code></li></ul><h3>命令行</h3><h4>lerna init</h4><p>创建基于<code>lerna</code>的<code>monorepo</code>仓库，或者更新当前仓库的<code>lerna</code>版本。</p><h4>lerna bootstrap</h4><p>安装所有<code>package</code>的依赖项。<code>lerna</code>为项目内的每个<code>package</code>执行<code>npm install</code>或者<code>yarn install</code>，然后在这些包之间创建<a href="https://zh.wikipedia.org/wiki/%E7%AC%A6%E5%8F%B7%E9%93%BE%E6%8E%A5"><code>symlink</code></a>，以相互引用。</p><p>例如<code>babel</code>项目中<code>babel-core</code>依赖<code>@babel/generator</code>，而且它们都在同一个<code>monorepo</code>中，那么在<code>packages/babel-core</code>下安装的<code>@babel/generator</code>会通过<code>symlink</code>链接到同级的<code>@babel/generator</code>目录。</p><p><code>symlink</code>是一类特殊的文件，包含一条以绝对路径或者相对路径形式指向其他文件或者目录的引用。目前 Unix，Windows 都支持<code>symlink</code>，一个符号链接文件仅包含有一个文本字符串，其被操作系统解释为一条指向另一个文件或者目录的路径。</p><p><code>lerna bootstrap --use-workspaces</code>使用<code>yarn workspace</code>的形式管理<code>packages</code>的依赖。</p><h4>lerna add</h4><pre><code class="language-bash">lerna add &lt;package&gt; --scope=[package] --dev
+</code></pre><p><code>lerna add</code>用于安装依赖到指定<code>package</code>内部，如果没有指定<code>scope</code>，那么默认安装到所有<code>package</code>内部。</p><p>注意不同<code>package</code>之间如果相互依赖，也需要通过<code>lerna add</code>安装，这样<code>lerna</code>才能创建<code>symlink</code>关联到依赖的<code>package</code>内部。</p><h4>lerna publish</h4><p>发布所有更新过内容的<code>package</code>仓库到<code>npm</code>，会提示<code>version</code>的更新。</p><h4>lerna run <!-- -->[script]</h4><p>在包含指定<code>script</code>的<code>package</code>内部执行该命令。</p><h3>lerna 的局限性</h3><p><code>lerna</code>作为<code>package</code>管理的容器，<code>lerna</code>无法做到高效地管理<code>node_modules</code>：</p><ul><li><code>lerna</code>为每个<code>package</code>单独执行<code>xxx install</code>的操作，并且依赖之间无法共享，所以会导致依赖的重复安装，可以参考上文使用<code>lerna</code>创建的项目内部管理<code>react</code>的安装项。</li><li><code>lerna</code>必须通过执行<code>lerna bootstrap</code>才能为不同<code>package</code>创建<code>symlink</code>，而如果单独在<code>package</code>内部执行<code>yarn install</code>等命令就会导致<code>symlink</code>被破坏，因此<code>package</code>管理非常受限制。</li></ul><h2>yarn workspace</h2><p>为了解决<code>lerna</code>的局限性，<code>yarn</code>从<code>0.28</code>版本（目前 1.22）以后支持<code>monorepo</code>管理<code>package</code>之间的依赖。</p><p>并且从<code>yarn-1.0</code>版本以后，<code>yarn</code>默认支持，这种方式在<code>yarn</code>内部称为<code>workspace</code>。使用上来说，只需要在</p><p><code>monorepo</code>根目录下的<code>package.json</code>中注册<code>workspace</code>的文件夹即可。</p><pre><code class="language-json">{
+  &quot;private&quot;: true,
+  &quot;workspaces&quot;: [&quot;packages/*&quot;]
+}
+</code></pre><p><code>yarn workspace</code>不能取代<code>lerna</code>，主要是为了解决<code>lerna</code>的问题，因此<code>lerna</code>从<code>2.0.0</code>版本以后，支持使用<code>lerna bootstrap --use-workspace</code>来使用<code>yarn</code>引导<code>monorepo</code>依赖的管理和创建，这样<code>monorepo</code>内部所有<code>package</code>的依赖都只会安装在仓库根目录的<code>node_modules</code>下。</p><p><img src="../public/images/image-20211212164417532.png" alt="image-20211212164417532"/></p><h3>命令行</h3><h3>yarn install</h3><p>安装依赖</p><h4>yarn workspace</h4><pre><code class="language-bash">yarn workspace &lt;workspace_name&gt; &lt;command&gt;
+</code></pre><p><code>yarn workspace</code>命令用于在指定<code>package</code>内部执行命令，类似于<code>lerna add</code>。</p><p>例如安装依赖到指定<code>package</code>内部：</p><pre><code class="language-bash">yarn workspace package1 add react react-dom --D
+</code></pre><h3>yarn workspaces</h3><pre><code class="language-bash">yarn workspaces run &lt;command&gt;
+</code></pre><p>在每个<code>packages</code>内部执行命令，类似于<code>lerna run</code>。</p>]]></content:encoded>
+        </item>
+        <item>
+            <title><![CDATA[GitHub不再支持密码登录验证]]></title>
+            <link>https://tommyhu.me/2021/10/30/GitHub不再支持密码登录验证</link>
+            <guid>/2021/10/30/GitHub不再支持密码登录验证</guid>
+            <pubDate>Sat, 30 Oct 2021 00:00:00 GMT</pubDate>
+            <description><![CDATA[GitHub 取消密码登录验证的方式]]></description>
+            <content:encoded><![CDATA[<h2>GitHub 取消密码登录验证的方式</h2><p>2021 年 8 月 13 日以后，<a href="https://github.blog/changelog/2021-08-12-git-password-authentication-is-shutting-down/">GitHub 宣布不再支持密码登录的客户端授权方式</a>。</p><p><img src="../public/images/image-20210922195230530.png" alt="image-20210922195230530"/></p><h2>解决方式</h2><blockquote><p><a href="https://stackoverflow.com/questions/68775869/support-for-password-authentication-was-removed-please-use-a-personal-access-to">git - Support for password authentication was removed. Please use a personal access token instead - Stack Overflow</a></p></blockquote><p>参考 StackOverflow 上的解释，现在只能通过在 GitHub 网站生成 PAT (Personal Access Token)的方式保存在客户端来进行校验和授权。</p><h3>生成 PAT</h3><p>在 GitHub 官网生成 PAT 按照以下方式：</p><ol><li>右上角点击个人头像，找到 <strong>Settings</strong> 并打开；</li><li>然后在 <strong>Settings</strong> 面板左侧目录找到 <strong>Developer Settings</strong>，点击进去就可以看到 <strong>Personal access tokens</strong> 了</li></ol><p><img src="../public/images/image-20210922200800547.png" alt="image-20210922200800547"/></p><h3>设置 PAT</h3><p>生成 PAT 以后呢，以 windows10 系统为例，在<strong>控制面板 =&gt; 个人账户</strong>下找到<strong>凭据管理器</strong></p><p><img src="../public/images/image-20210922201159423.png" alt="image-20210922201159423"/></p><p>然后点击右侧 Windows 凭据，找到<code>git:https://github.com</code>，如果没有就点击添加，用户名就是邮箱地址，密码是刚才生成的 token，保存即可。</p><p><img src="../public/images/image-20210922201533179.png" alt="image-20210922201533179"/></p><h2>注意</h2><p>如果本地设置了 Git 代理地址，则需要重置代理</p><pre><code class="language-shell">git config --global https.proxy http://127.0.0.1:1080
+
+git config --global https.proxy https://127.0.0.1:1080
+
+git config --global --unset http.proxy
+
+git config --global --unset https.proxy
+</code></pre>]]></content:encoded>
+        </item>
+    </channel>
+</rss>
