@@ -8,7 +8,7 @@ const path = require("path");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: "icodex",
+  title: "tommyhu",
   tagline: "frontend development cookbook",
   url: "https://tommyhu.me",
   baseUrl: "/",
@@ -17,7 +17,7 @@ const config = {
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
   organizationName: "wood3n",
-  projectName: "icodex-next",
+  projectName: "freedomdebug.github.io",
   plugins: [
     "@docusaurus/theme-live-codeblock",
     path.resolve(__dirname, "./src/plugins/webpackConfig.js"),
@@ -45,7 +45,7 @@ const config = {
           remarkPlugins: [math],
           rehypePlugins: [katex],
           editUrl: ({ docPath }) => {
-            return `https://github.com/wood3n/icodex-next/tree/master/docs/${docPath}`;
+            return `https://github.com/freedomdebug/freedomdebug.github.io/tree/master/docs/${docPath}`;
           },
         },
         blog: {
@@ -85,7 +85,7 @@ const config = {
         // Public API key: it is safe to commit it
         apiKey: "dsdaasdad",
 
-        indexName: "icodex",
+        indexName: "tommyhu",
       },
       navbar: {
         title: "tommyhu",
@@ -161,7 +161,7 @@ const config = {
             docId: "tools/git",
           },
           {
-            href: "https://github.com/wood3n/icodex-next",
+            href: "https://github.com/freedomdebug/freedomdebug.github.io/",
             position: "right",
             // custom logo in custom.css
             className: "header-github-link",

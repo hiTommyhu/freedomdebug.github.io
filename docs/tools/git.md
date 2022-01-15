@@ -26,7 +26,7 @@ title: git命令整理
 Git 自带一个 `git config` 的工具来帮助设置控制 Git 外观和行为的配置变量，比较常见的就是配置 git 的用户名和邮箱
 
 ```shell
-git config --global user.name "icodex"
+git config --global user.name "freedomdebug"
 git config --global user.email xxx@163.com
 ```
 
