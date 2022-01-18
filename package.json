@@ -1,0 +1,15 @@
+{
+  "name": "freedomdebug.github.io",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:freedomdebug/freedomdebug.github.io.git",
+  "author": "freedomdebug <7620476+freedomdebug@users.noreply.github.com>",
+  "license": "MIT",
+  "scripts": {
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  },
+  "devDependencies": {
+    "vuepress": "^2.0.0-beta.33"
+  }
+}
