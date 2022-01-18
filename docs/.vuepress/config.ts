@@ -9,11 +9,7 @@ module.exports = {
     theme: '@vuepress/theme-default',
     themeConfig: {
       logo: '/images/logo.jpg',
-      navbar: [
-        {
-          text: 'contact-author',
-          link: '/bar/contact-author'
-        },
-      ],
+      navbar: require('./config/navbar.ts'),
+      sidebar: require('./config/sidebar.ts'),
     },
   }
