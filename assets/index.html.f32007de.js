@@ -1,1 +1,0 @@
-const e={key:"v-eb2bedac",path:"/blog/gojs/",title:"",lang:"zh-CN",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:1642605144e3,contributors:[{name:"freedomdebug",email:"7620476+freedomdebug@users.noreply.github.com",commits:1}]},filePathRelative:"blog/gojs/README.md"};export{e as data};
