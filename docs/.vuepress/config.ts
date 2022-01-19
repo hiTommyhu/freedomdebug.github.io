@@ -23,6 +23,7 @@ module.exports = {
       logo: '/images/logo.jpg',
       navbar: require('./config/navbar.ts'),
       sidebar: require('./config/sidebar.ts'),
+      darkMode: true,
     },
     plugins: [
       [
