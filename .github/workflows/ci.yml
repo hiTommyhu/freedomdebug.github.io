@@ -13,15 +13,23 @@ jobs:
         with:
           node-version: 14.x
           cache: yarn
+          
+      - uses: actions/cache@v2.1.6
+        id: node-modules
+        with:
+          path: node_modules/
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+            
       - name: install dependency
         run: yarn install --frozen-lockfile
 
       - name: build file
         run: yarn docs:build
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.5
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # Build output to publish to the `gh-pages` branch:
-          publish_dir: ./build
+          branch: gh-pages
+          folder: dist
