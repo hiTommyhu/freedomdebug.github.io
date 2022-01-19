@@ -1,5 +1,6 @@
 module.exports = {
     base: '/',
+    dest: "dist",
     // 站点配置
     lang: 'zh-CN',
     title: 'TommyHu',
