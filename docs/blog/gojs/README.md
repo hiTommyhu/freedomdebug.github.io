@@ -380,3 +380,18 @@ go.GraphObject.defineBuilder("ScrollingTable", function(args) {
 });
 ```
 [preview](https://gojs.net/extras/ScrollingGroup.html)
+[来源](https://forum.nwoods.com/t/how-to-enable-a-vertical-scrollbar-inside-a-group-with-tree-layout/7879)
+
+## use
+```javascript
+myDiagram.groupTemplateMap.add('groupTemplateNormal', groupTemplateNormal);
+myDiagram.groupTemplateMap.add('groupTemplateScroll', groupTemplateScroll);
+
+this.addNode({
+    key: 'GroupKey',
+    text: 'GroupText',
+    isGroup: true,
+    category: groupNodeCount > 6 ? 'groupTemplateScroll' : 'groupTemplateNormal',
+  });
+```
+
