@@ -388,10 +388,10 @@ myDiagram.groupTemplateMap.add('groupTemplateNormal', groupTemplateNormal);
 myDiagram.groupTemplateMap.add('groupTemplateScroll', groupTemplateScroll);
 
 this.addNode({
-    key: 'GroupKey',
-    text: 'GroupText',
-    isGroup: true,
-    category: groupNodeCount > 6 ? 'groupTemplateScroll' : 'groupTemplateNormal',
-  });
+  key: 'GroupKey',
+  text: 'GroupText',
+  isGroup: true,
+  category: groupNodeCount > 6 ? 'groupTemplateScroll' : 'groupTemplateNormal',
+});
 ```
 
