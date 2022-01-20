@@ -10,7 +10,14 @@ module.exports = [
                 children: [
                     { text: 'gojs', link: '/blog/gojs/' },
                 ]
+            },
+            {
+                text: 'HTTP',
+                children: [
+                    { text: 'HTTP1.1', link: '/blog/crlf/' },
+                ]
             }
+            
         ]
     },
     {
