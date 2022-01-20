@@ -10,7 +10,7 @@ actions:
   - text: Github
     link: https://github.com/freedomdebug
     type: secondary
-footer: MIT Licensed | Copyright © 2018-present Tommy Hu
+footer: MIT Licensed | Copyright © 2022-present Tommy Hu
 ---
 
 ```bash
