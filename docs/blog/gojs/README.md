@@ -1,6 +1,6 @@
 ## Scrolling Groups
-
-```
+go[v2.1.56]
+```javascript
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,7 +12,7 @@
 <body onload="init()">
   <div id="myDiagramDiv" style="border: solid 1px black; width:100%; height:500px; min-width: 200px"></div>
 
-  <script src="../release/go.js"></script>
+  <script src="https://gojs.net/latest/release/go.js"></script>
   <script src="../extensions/ScrollingTable.js"></script>  <!-- to define AutoRepeatButton -->
 
   <script id="code">
@@ -207,7 +207,7 @@ function init() {
 ```
 
 ScrollingTable.js
-```
+```javascript
 "use strict";
 /*
 *  Copyright (C) 1998-2021 by Northwoods Software Corporation. All Rights Reserved.
