@@ -1,4 +1,5 @@
 ---
+pageClass: home-page-class
 home: true
 title: 首页
 heroImage: /images/screen.jpg
