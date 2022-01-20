@@ -1,7 +1,7 @@
 ---
 home: true
 title: 首页
-heroImage: /images/logo.jpg
+heroImage: /images/screen.jpg
 actions:
   - text: 老博客
     link: http://tommyhu.cn
