@@ -1,0 +1,1 @@
+const e={key:"v-eb2bedac",path:"/blog/gojs/",title:"",lang:"zh-CN",frontmatter:{},excerpt:"",headers:[{level:2,title:"Scrolling Groups",slug:"scrolling-groups",children:[]}],git:{updatedTime:1642659748e3,contributors:[{name:"tommy.hu",email:"13776119594@163.com",commits:1}]},filePathRelative:"blog/gojs/README.md"};export{e as data};
