@@ -15,7 +15,7 @@ module.exports = [
                 text: 'HTTP',
                 children: [
                     { text: 'HTTP1.1', link: '/blog/HTTP1.1/' },
-                    { text: 'crlf', link: '/blog/crlf/' },
+                    { text: 'crlf', link: '/blog/crlf/' }
                 ]
             }
             
