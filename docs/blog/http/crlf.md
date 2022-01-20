@@ -9,7 +9,7 @@
 |      LF	  |  \n	        |  Unix/Linux/Mac OS X	|  10
 |     CR LF    |  	\r\n  |  Windows	                 | 
 
-![alt 属性文本](images/crlf.png)
+![alt 属性文本](/images/crlf.png)
 
 >很长一段时间里，对于CRLF、CR、LF的理解仅限于不同操作系统下对换行符的定义。所谓知其然需知其所以然，从学习中找到乐趣，对知识的记忆才会更加深刻。
 
@@ -26,7 +26,7 @@ Unix/Linux/Mac OS X操作系统采用单个字符LF来进行换行；
 另外，MacIntosh操作系统（即早期的Mac操作系统）采用单个字符CR来进行换行。
 
 ## 野史
-![alt 属性文本](images/print.png)
+![alt 属性文本](/images/print.png)
 
 老式机械打字机（来源：视觉中国）
 
@@ -39,4 +39,4 @@ Unix/Linux/Mac OS X操作系统采用单个字符LF来进行换行；
 ## 结论
 许多现代的文本编辑器和命令行工具都提供了可选择的换行符配置，方便用户按照自己的意愿来改变换行符的表现形式，所以我们只需要知道CRLF、CR、LF的作用即可。
 
-![alt 属性文本](images/girl.jpg)
+![alt 属性文本](/images/girl.jpg)
