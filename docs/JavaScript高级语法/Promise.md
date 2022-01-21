@@ -1,4 +1,4 @@
-# 你不容错过的JavaScript高级语法(Promise)
+# Promise
 
 众所周知，js在前端开发中的地位。学好它，真的很重要。
 
