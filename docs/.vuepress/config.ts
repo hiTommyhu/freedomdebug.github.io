@@ -7,7 +7,7 @@ module.exports = {
     description: 'tommyhu.me',
     head: [
       ['link', { rel: 'icon', href: '/images/favicon.ico' }],
-
+      ['link', { rel: 'stylesheet', href: '/css/index.css'}],
       // pwa
       ['link', { rel:"apple-touch-icon", sizes:"180x180", href:"/pwa/apple-touch-icon.png"}],
       ['link', { rel:"icon", type:"image/png", sizes:"32x32", href:"/pwa/favicon-32x32.png"}],
@@ -22,8 +22,8 @@ module.exports = {
     themeConfig: {
       logo: '/images/logo.jpg',
       navbar: require('./config/navbar.ts'),
-      sidebar: require('./config/sidebar.ts'),
       darkMode: true,
+      sidebar: 'auto'
     },
     plugins: [
       [
@@ -33,16 +33,18 @@ module.exports = {
         },
       ],
       [
-        '@vuepress/docsearch',
+        '@vuepress/plugin-search',
         {
-          apiKey: '<API_KEY>',
-          indexName: '<INDEX_NAME>',
+          // 排除首页
+          isSearchable: (page) => page.path !== '/',
+          // 允许搜索 Frontmatter 中的 `tags`
+          getExtraFields: (page) => page.frontmatter.tags ?? [],
           locales: {
             '/': {
-              placeholder: 'Search Documentation',
+              placeholder: 'Search',
             },
             '/zh/': {
-              placeholder: '搜索文档',
+              placeholder: '搜索',
             },
           },
         },

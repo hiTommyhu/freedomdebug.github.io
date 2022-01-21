@@ -1,9 +1,6 @@
 module.exports = [
     {
-        //可多级嵌套
-        //test为标签的文字内容
         text: '技术',
-        //items为子标签列表
         children: [
             {
                 text: '图形图像',
@@ -18,6 +15,11 @@ module.exports = [
                     '/blog/http/crlf.md',
                 ]
             },
+        ]
+    },
+    {
+        text: '思想',
+        children: [
             {
                 text: 'JavaScript高级语法',
                  children: [
@@ -53,7 +55,6 @@ module.exports = [
                     '/算法/二分查找.md'
                 ]
             }
-            
         ]
     },
     {

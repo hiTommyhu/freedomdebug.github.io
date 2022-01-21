@@ -1,0 +1,10 @@
+:root {
+    --nprogress-color: #29d;
+    --nprogress-z-index: 1031;
+}
+
+:root {
+    --back-to-top-z-index: 5;
+    --back-to-top-color: gray;
+    --back-to-top-color-hover: lightgray;
+  }
