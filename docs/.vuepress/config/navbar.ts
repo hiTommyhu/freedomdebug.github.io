@@ -21,36 +21,36 @@ module.exports = [
             {
                 text: '你不容错过的JavaScript高级语法',
                  children: [
-                    '/blog/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法一.md',
-                    '/blog/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法二.md',
-                     '/blog/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法三.md',
-                    '/blog/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法四.md',
-                    '/blog/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法Proxy和Reflect.md',
-                    '/blog/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法Promise.md',
-                    '/blog/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法Iterator和Generator.md',
+                    '/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法一.md',
+                    '/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法二.md',
+                    '/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法三.md',
+                    '/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法四.md',
+                    '/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法Proxy和Reflect.md',
+                    '/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法Promise.md',
+                    '/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法Iterator和Generator.md',
                 ]
             },
             {
                 text: '设计模式',
                 children: [
-                    '/blog/设计模式/工厂模式/工厂模式.md',
-                     '/blog/设计模式/工厂方法模式/工厂方法模式.md',
-                     '/blog/设计模式/抽象工厂模式/抽象工厂模式.md',
-                     '/blog/设计模式/单例模式/单例模式.md',
-                     '/blog/设计模式/适配器模式/适配器模式.md',
-                     '/blog/设计模式/观察者模式(发布-订阅者模式或消息机制)/观察者模式.md',
+                    '/设计模式/工厂模式/工厂模式.md',
+                    '/设计模式/工厂方法模式/工厂方法模式.md',
+                    '/设计模式/抽象工厂模式/抽象工厂模式.md',
+                    '/设计模式/单例模式/单例模式.md',
+                    '/设计模式/适配器模式/适配器模式.md',
+                    '/设计模式/观察者模式(发布-订阅者模式或消息机制)/观察者模式.md',
                  ]
             },
             {
                 text: '软件设计',
                 children: [
-                    '/blog/软件设计/SOLID.md'
+                    '/软件设计/SOLID.md'
                 ]
             },
             {
                 text: '算法',
                 children: [
-                    '/blog/算法/二分查找.md'
+                    '/算法/二分查找.md'
                 ]
             }
             
