@@ -4,7 +4,7 @@ home: true
 title: 首页
 heroImage: /images/screen.jpg
 actions:
-  - text: 老博客
+  - text: Old Blog
     link: http://tommyhu.cn
     type: primary
   - text: Github
