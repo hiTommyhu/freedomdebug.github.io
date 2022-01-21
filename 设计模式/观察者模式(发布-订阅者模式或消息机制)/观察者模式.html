@@ -23,7 +23,7 @@
 			}
     </script>
     <link rel="icon" href="/images/favicon.ico"><link rel="apple-touch-icon" sizes="180x180" href="/pwa/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="/pwa/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="/pwa/favicon-16x16.png"><link rel="manifest" href="/pwa/site.webmanifest"><link rel="mask-icon" href="/pwa/safari-pinned-tab.svg" color="#5bbad5"><meta name="msapplication-TileColor" content="#da532c"><meta name="theme-color" content="#ffffff"><title>观察者模式 | TommyHu</title><meta name="description" content="tommyhu.me">
-    <link rel="modulepreload" href="/assets/app.087df107.js"><link rel="modulepreload" href="/assets/观察者模式.html.803a00b1.js"><link rel="modulepreload" href="/assets/plugin-vue_export-helper.21dcd24c.js"><link rel="modulepreload" href="/assets/观察者模式.html.83bd2d61.js">
+    <link rel="modulepreload" href="/assets/app.dcbfd936.js"><link rel="modulepreload" href="/assets/观察者模式.html.a3ffacad.js"><link rel="modulepreload" href="/assets/plugin-vue_export-helper.21dcd24c.js"><link rel="modulepreload" href="/assets/观察者模式.html.739a5002.js">
     <link rel="stylesheet" href="/assets/style.161cc2e3.css">
   </head>
   <body>
@@ -33,6 +33,6 @@
   },false)
 
 </code></pre><div class="line-numbers"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br></div></div><h3 id="vue-数据的双向绑定" tabindex="-1"><a class="header-anchor" href="#vue-数据的双向绑定" aria-hidden="true">#</a> vue 数据的双向绑定</h3><p>利用 Object.defineProperty() 对数据进行劫持，设置一个监听器 Observer，用来监听所有属性，如果属性上发上变化了，就需要告诉订阅者 Watcher 去更新数据，最后指令解析器 Compile 解析对应的指令，进而会执行对应的更新函数，从而更新视图，实现了双向绑定~</p><p>Vue 中我们通过 props 完成父组件向子组件传递数据，子组件与父组件通信我们通过自定义事件即 $on,$emit 来实现，其实也就是通过 $emit 来发布消息，并对订阅者 $on 做统一处理 ~</p><!--]--></div><footer class="page-meta"><!----><div class="meta-item last-updated"><span class="meta-item-label">Last Updated: </span><!----></div><div class="meta-item contributors"><span class="meta-item-label">Contributors: </span><span class="meta-item-info"><!--[--><!--[--><span class="contributor" title="email: 13776119594@163.com">tommy.hu</span><!----><!--]--><!--]--></span></div></footer><!----><!--[--><!--]--></main><!--]--></div><!----><!--]--></div>
-    <script type="module" src="/assets/app.087df107.js" defer></script>
+    <script type="module" src="/assets/app.dcbfd936.js" defer></script>
   </body>
 </html>
