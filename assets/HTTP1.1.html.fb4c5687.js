@@ -1,0 +1,1 @@
+const t={key:"v-6c28f940",path:"/blog/http/HTTP1.1.html",title:"HTTP1.1",lang:"zh-CN",frontmatter:{},excerpt:"",headers:[{level:2,title:"1.HTTP\u62A5\u6587",slug:"_1-http\u62A5\u6587",children:[]}],git:{updatedTime:1642735504e3,contributors:[{name:"tommy.hu",email:"13776119594@163.com",commits:1}]},filePathRelative:"blog/http/HTTP1.1.md"};export{t as data};
