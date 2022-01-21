@@ -1,3 +1,4 @@
+const sidebar = require('../../utils/sidebar');
 module.exports = {
     base: '/',
     dest: "dist",
@@ -22,7 +23,7 @@ module.exports = {
     themeConfig: {
       logo: '/images/logo.jpg',
       navbar: require('./config/navbar.ts'),
-      sidebar: require('./config/sidebar.ts'),
+      sidebar,
       darkMode: true,
     },
     plugins: [
