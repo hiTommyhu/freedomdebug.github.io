@@ -1,2 +1,0 @@
-import{o as s,c as e,d as n}from"./app.ddbc3fac.js";import{_ as a}from"./plugin-vue_export-helper.21dcd24c.js";const c={},o={class:"language-bash ext-sh line-numbers-mode"},t=n(`<pre class="language-bash"><code>console.log<span class="token punctuation">(</span><span class="token string">&#39;Hello World!&#39;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-</code></pre><div class="line-numbers"><span class="line-number">1</span><br></div>`,2),l=[t];function p(r,d){return s(),e("div",o,l)}var u=a(c,[["render",p]]);export{u as default};
