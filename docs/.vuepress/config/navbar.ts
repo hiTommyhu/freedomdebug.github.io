@@ -17,6 +17,18 @@ module.exports = [
                     '/blog/http/HTTP1.1.md',
                     '/blog/http/crlf.md',
                 ]
+            },
+            {
+                text: '你不容错过的JavaScript高级语法',
+                 children: [
+                    '/blog/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法(一).md',
+                    '/blog/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法(二).md',
+                     '/blog/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法(三).md',
+                    '/blog/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法(四).md',
+                    '/blog/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法(Proxy, Reflect).md',
+                    '/blog/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法(Promise).md',
+                    '/blog/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法(Iterator, Generator).md',
+                ]
             }
             
         ]
