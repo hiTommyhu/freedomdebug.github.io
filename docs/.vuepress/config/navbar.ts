@@ -19,7 +19,7 @@ module.exports = [
                 ]
             },
             {
-                text: '你不容错过的JavaScript高级语法',
+                text: 'JavaScript高级语法',
                  children: [
                     '/JavaScript高级语法/JavaScript高级语法1.md',
                     '/JavaScript高级语法/JavaScript高级语法2.md',
