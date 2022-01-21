@@ -21,13 +21,13 @@ module.exports = [
             {
                 text: '你不容错过的JavaScript高级语法',
                  children: [
-                    '/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法一.md',
-                    '/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法二.md',
-                    '/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法三.md',
-                    '/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法四.md',
-                    '/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法Proxy和Reflect.md',
-                    '/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法Promise.md',
-                    '/你不容错过的JavaScript高级语法/你不容错过的JavaScript高级语法Iterator和Generator.md',
+                    '/JavaScript高级语法/JavaScript高级语法一.md',
+                    '/JavaScript高级语法/JavaScript高级语法二.md',
+                    '/JavaScript高级语法/JavaScript高级语法三.md',
+                    '/JavaScript高级语法/JavaScript高级语法四.md',
+                    '/JavaScript高级语法/Proxy和Reflect.md',
+                    '/JavaScript高级语法/Promise.md',
+                    '/JavaScript高级语法/Iterator和Generator.md',
                 ]
             },
             {
