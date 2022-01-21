@@ -1,4 +1,4 @@
-# 
+# SOLD
 SOLID是SRP、OCP、LSP、ISP和DIP的首字母缩写组成，接下来看一下SOLID的具体含义
 
 ## 单一职责原则
