@@ -2,7 +2,7 @@
     <h1>MyTemplate</h1>
  </template>
  
- <script lang="ts">
+ <script>
  export default {
  
  }
