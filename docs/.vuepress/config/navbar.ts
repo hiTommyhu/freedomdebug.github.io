@@ -59,7 +59,10 @@ module.exports = [
     },
     {
         text: '测试',
-        link: '/blog/test'
+        children: [
+            '/blog/test/md中使用自定义vue组件.md',
+            '/blog/test/使用自定义布局.md',
+        ]
     },
     {
         text: '关于',

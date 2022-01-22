@@ -1,4 +1,0 @@
----
-layout: Detail
----
-test
