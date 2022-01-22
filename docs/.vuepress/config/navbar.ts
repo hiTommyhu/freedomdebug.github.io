@@ -58,12 +58,18 @@ module.exports = [
         ]
     },
     {
-        text: '测试',
+        text: '小册',
         children: [
-            '/blog/test/md中使用自定义vue组件.md',
-            '/blog/test/使用自定义布局.md',
+            '/book/typescript通览.md',
         ]
     },
+    // {
+    //     text: '测试',
+    //     children: [
+    //         '/blog/test/md中使用自定义vue组件.md',
+    //         '/blog/test/使用自定义布局.md',
+    //     ]
+    // },
     {
         text: '关于',
         link: '/bar/contact-author'
