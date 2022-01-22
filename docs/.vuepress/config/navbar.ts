@@ -18,7 +18,7 @@ module.exports = [
         ]
     },
     {
-        text: '思想',
+        text: '思考',
         children: [
             {
                 text: 'JavaScript高级语法',
@@ -56,6 +56,10 @@ module.exports = [
                 ]
             }
         ]
+    },
+    {
+        text: '测试',
+        link: '/blog/test'
     },
     {
         text: '关于',

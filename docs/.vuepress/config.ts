@@ -1,3 +1,5 @@
+
+const { path } = require('@vuepress/utils');
 module.exports = {
     base: '/',
     dest: "dist",
@@ -26,13 +28,22 @@ module.exports = {
       sidebar: 'auto'
     },
     plugins: [
-      ['@vssue/vuepress-plugin-vssue', {
-        platform: 'github-v4',
-        owner: 'freedomdebug',
-        repo: 'freedomdebug.github.io',
-        clientId: '70a7dc527b3ce3856fbc',
-        clientSecret: '6329f2cf1d14078e74e96453d630740d1e2b5e1e',
-      }],
+      [
+        '@vuepress/plugin-register-components',
+          {
+            componentsDir: path.resolve(__dirname, './components')
+          }
+      ],
+      [
+        '@vssue/vuepress-plugin-vssue',
+        {
+          platform: 'github-v4',
+          owner: 'freedomdebug',
+          repo: 'freedomdebug.github.io',
+          clientId: '70a7dc527b3ce3856fbc',
+          clientSecret: '6329f2cf1d14078e74e96453d630740d1e2b5e1e',
+        }
+      ],
       [
         '@vuepress/pwa',
         {

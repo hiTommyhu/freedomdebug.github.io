@@ -12,3 +12,17 @@
 :root {
   scroll-behavior: smooth;
 }
+
+:root {
+  .back-to-top {
+    --back-to-top-color: gray;
+    --back-to-top-color-hover: lightgray;
+  }
+}
+
+html.dark {
+  .back-to-top {
+    --back-to-top-color: gray;
+    --back-to-top-color-hover: lightgray;
+  }
+}
