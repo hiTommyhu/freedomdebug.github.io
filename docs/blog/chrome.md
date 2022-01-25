@@ -1,4 +1,9 @@
 # 谷歌插件
 
-github1s
-gitpod
+* GitHub1s
+* Gitpod
+* JSONVue
+* Vue.js devtools
+* 沙拉查词
+* 稀土掘金
+* 草料二维码

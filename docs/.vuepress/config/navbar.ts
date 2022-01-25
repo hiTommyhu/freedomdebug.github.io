@@ -82,7 +82,7 @@ module.exports = [
     //     ]
     // },
     {
-        text: '代码碎片和实例',
+        text: '碎片',
         link: '/blog/codes.md'
     },
     {
