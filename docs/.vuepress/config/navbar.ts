@@ -30,6 +30,11 @@ module.exports = [
                     '/JavaScript高级语法/Proxy和Reflect.md',
                     '/JavaScript高级语法/Promise.md',
                     '/JavaScript高级语法/Iterator和Generator.md',
+                    '/JavaScript高级语法/async,await,事件循环.md',
+                    '/JavaScript高级语法/错误处理.md',
+                    '/JavaScript高级语法/模块化.md',
+                    '/JavaScript高级语法/JSON细析,浏览器数据存储.md',
+                    '/JavaScript高级语法/BOM,DOM简析.md',
                 ]
             },
             {
