@@ -3,6 +3,12 @@ module.exports = [
         text: '技术',
         children: [
             {
+                text: 'nodejs',
+                children: [
+                    { text: 'node', link: '/blog/node/' },
+                ]
+            },
+            {
                 text: '图形图像',
                 children: [
                     { text: 'gojs', link: '/blog/gojs/' },
@@ -75,6 +81,17 @@ module.exports = [
     //         '/blog/test/使用自定义布局.md',
     //     ]
     // },
+    {
+        text: '代码碎片和实例',
+        link: '/blog/codes.md'
+    },
+    {
+        text: '其他',
+        children: [
+            '/blog/chrome.md',
+            '/blog/npm.md',
+        ]
+    },
     {
         text: '关于',
         link: '/bar/contact-author'
