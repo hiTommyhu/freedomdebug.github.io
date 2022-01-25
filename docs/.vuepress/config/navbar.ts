@@ -96,4 +96,8 @@ module.exports = [
         text: '关于',
         link: '/bar/contact-author'
     },
+    {
+        text: '留言',
+        link: 'https://github.com/freedomdebug/freedomdebug.github.io/issues'
+    },
 ]
