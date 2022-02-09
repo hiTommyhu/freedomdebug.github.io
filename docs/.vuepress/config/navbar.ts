@@ -21,6 +21,12 @@ module.exports = [
                     '/blog/http/crlf.md',
                 ]
             },
+            {
+                text: 'Others',
+                children: [
+                    '/blog/others/ArrayBuffer转base64详解.md',
+                ]
+            },
         ]
     },
     {
