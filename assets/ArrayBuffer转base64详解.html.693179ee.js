@@ -1,1 +1,0 @@
-const e={key:"v-d8b0ceb2",path:"/blog/others/ArrayBuffer%E8%BD%ACbase64%E8%AF%A6%E8%A7%A3.html",title:"ArrayBuffer\u8F6Cbase64\u8BE6\u89E3",lang:"zh-CN",frontmatter:{},excerpt:"",headers:[],git:{updatedTime:1644402619e3,contributors:[{name:"tommy.hu",email:"13776119594@163.com",commits:1}]},filePathRelative:"blog/others/ArrayBuffer\u8F6Cbase64\u8BE6\u89E3.md"};export{e as data};
