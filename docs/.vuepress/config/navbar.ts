@@ -25,6 +25,7 @@ module.exports = [
                 text: 'Others',
                 children: [
                     '/blog/others/ArrayBuffer转base64详解.md',
+                    '/blog/others/前端二进制.md',
                 ]
             },
         ]
