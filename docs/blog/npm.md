@@ -51,6 +51,6 @@ npx node@14.10.0 -v
 某些场景下，这个方法用来切换 Node 版本，要比 nvm 那样的版本管理器方便一些。
 
 ### cssnano
-一块mini css的postcss插件
+一款mini css的postcss插件
 
 ## 前端
