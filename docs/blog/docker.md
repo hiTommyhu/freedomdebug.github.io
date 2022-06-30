@@ -7,7 +7,7 @@
 >
 > 容器（Containers）
 > Docker容器就像是一个文件夹，容器中包含了应用运行所需的一切。每个容器都是一个隔离的和安全的应用平台。容器是镜像的一个实例，它是有状态的，而且随时会改变，容器一般是短暂的。
-
+## 安装和发布
 ### docker在centros7安装
 
 ```shell
@@ -92,7 +92,11 @@ docker push hub.xxx.com/unclewang/node:18.4.0
 https://hub.xxx.com/hub/projects/374/repositories/unclewang%2Fnode
 ```
 
-###  Dockerfile
+## 常用命令
+
+#### [速查表](https://www.runoob.com/docker/docker-command-manual.html)
+
+##  Dockerfile
 
 ```shell
 docker build -f /path/to/Dockerfile
@@ -192,6 +196,21 @@ CMD npm run start
 
 ```
 
+
+
+#### ENTRYPOINT
+
+```SHELL
+exec格式：ENTRYPOINT ["executable", "param1", "param2"]
+shell格式：ENTRYPOINT command param1 param2
+```
+
+
+
+##### CMD VS ENTRYPOINT
+
+> ENTRYPOINT指令和 CMD 相似，都可以让容器在每次启动时执行相同的命令，但是又有不同的地方，CMD可以是命令，也可以是参数，而ENTRYPOINT只能是命令。
+
 #### LABEL
 
 > 向镜像添加标签，例如作者，版本等信息
@@ -288,7 +307,7 @@ COPY src /app/src
 
 
 
-#### ADD VS COPY
+##### ADD VS COPY
 
 > COPY 命令的超集
 >
@@ -314,3 +333,47 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 这里定义了环境变量NODE_VERSION，后面的RUN指令中可以多次使用变量进行操作；因此如果我们后续想要升级node版本，只需要更新7.2.0即可
 ```
 
+#### ARG
+
+```SHELL
+ARG <name>[=<default value>]
+```
+
+> ARG 所设置的构建环境的环境变量
+
+
+
+###### ENV VS ARG
+
+> 构建参数和 ENV 的效果一样，都是设置环境变量。所不同的是，ARG 所设置的构建环境的环境变量，在将来容器运行时是不会存在这些环境变量的。通过 docker history 可以看到所有设置的值。
+
+
+
+#### VOLUME
+
+```SHELL
+VOLUME ["/data"]
+```
+
+> VOLUME指令创建具有指定名称的挂载点，并将其标记为从本机主机或其他容器保留外部挂载的卷。该值可以是JSON数组VOLUME ["/var/log/"]或具有多个参数的纯字符串。为了防止运行时用户忘记将动态文件所保存目录挂载为卷，在 dockerfile 中，我们可以事先指定某些目录挂载为匿名卷，这样在运行时如果用户不指定挂载，其应用也可以正常运行，不会向容器存储层写入大量数据。
+
+
+
+#### USER
+
+````SHELL
+USER <user>[:<group>]
+USER <UID>[:<GID>]
+````
+
+> 指定运行容器时的用户名或 UID，后续的 RUN 也会使用指定用户。当服务不需要管理员权限时，可以通过该命令指定运行用户。并且可以在之前创建所需要的用户。
+
+
+
+#### ONBUILD
+
+```SHELL
+ONBUILD [INSTRUCTION]
+```
+
+> ONBUILD 是一个特殊的指令，它的功能时添加一个将来执行的触发器指令到镜像中，它后面跟的是其它指令，比如 RUN, COPY 等，而这些指令，在当前镜像构建时并不会被执行，当该镜像作为FROM指令的参数时， 这些触发器指令就会在FROM指令执行时加入到构建中。当需要构建一个基础镜像时，ONBUILD是很有用的。
