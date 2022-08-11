@@ -3,6 +3,10 @@ module.exports = [
     text: 'JavaScript高级语法',
     items: [
       {
+        text: 'Home',
+        link: '/files/home',
+      },
+      {
         text: 'async,await,事件循环.md',
         link: '/files/JavaScript高级语法/async_await_事件循环',
       },

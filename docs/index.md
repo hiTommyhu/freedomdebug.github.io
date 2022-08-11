@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: 新欢
-      link: /files/JavaScript高级语法/async,await,事件循环.html
+      link: /files/home.html
     - theme: alt
       text: 老相好
       link: https://tommyhu.cn

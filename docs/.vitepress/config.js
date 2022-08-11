@@ -4,7 +4,7 @@ module.exports = {
   lang: 'zh-CN',
   base: '/',
   dest: 'public',
-  title: 'TommyHu',
+  title: 'TommyHu.me',
   description: 'tommyhu.me',
   themeConfig: {
     sidebar,
