@@ -1,7 +1,12 @@
 module.exports = [
   {
     text: 'Home',
-    link: '/files/home',
+    items: [
+      {
+        text: 'Home',
+        link: '/files/home',
+      }
+    ]
   },
   {
     text: 'JavaScript高级语法',
