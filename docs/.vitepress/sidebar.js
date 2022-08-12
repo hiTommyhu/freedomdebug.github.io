@@ -1,11 +1,11 @@
 module.exports = [
   {
+    text: 'Home',
+    link: '/files/home',
+  },
+  {
     text: 'JavaScript高级语法',
     items: [
-      {
-        text: 'Home',
-        link: '/files/home',
-      },
       {
         text: 'async,await,事件循环.md',
         link: '/files/JavaScript高级语法/async_await_事件循环',
@@ -70,6 +70,24 @@ module.exports = [
     ],
   },
   {
+    text: '样式表',
+    items: [
+      {
+        text: 'css.md',
+        link: '/files/others/css',
+      },
+    ]
+  },
+  {
+    text: '图形图像',
+    items: [
+      {
+        text: 'gojs.md',
+        link: '/files/图形图像/gojs',
+      },
+    ]
+  },
+  {
     text: 'others',
     items: [
       {
@@ -85,16 +103,8 @@ module.exports = [
         link: '/files/others/codes',
       },
       {
-        text: 'css.md',
-        link: '/files/others/css',
-      },
-      {
         text: 'docker.md',
         link: '/files/others/docker',
-      },
-      {
-        text: 'gojs.md',
-        link: '/files/others/gojs',
       },
       {
         text: 'linux yum源问题.md',
@@ -182,6 +192,22 @@ module.exports = [
       {
         text: 'vue srr如何定位客户端和服务端不一致引发问题的dom.md',
         link: '/files/vue/vue srr如何定位客户端和服务端不一致引发问题的dom',
+      },
+      {
+        text: 'vue2',
+        link: '/files/vue/vue2',
+      },
+      {
+        text: 'vue2.7',
+        link: '/files/vue/vue2.7',
+      },
+      {
+        text: 'vue3',
+        link: '/files/vue/vue3',
+      },
+      {
+        text: 'vue3.2',
+        link: '/files/vue/vue3.2',
       },
     ],
   },
