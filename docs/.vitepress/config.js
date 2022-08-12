@@ -11,7 +11,7 @@ module.exports = {
   themeConfig: {
     logo: '/images/logo.jpg',
     editLink: {
-      pattern: 'https://github.com/freedomdebug/freedomdebug.github.io/docs/:path',
+      pattern: 'https://github.com/freedomdebug/freedomdebug.github.io/blob/master/docs/:path',
       text: 'Edit this page on GitHub'
     },
     footer: {
