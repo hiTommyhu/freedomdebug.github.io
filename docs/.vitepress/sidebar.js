@@ -13,59 +13,17 @@ module.exports = [
     ]
   },
   {
-    text: 'JavaScript高级语法',
-    collapsible: true,
-    collapsed: false,
+    text: 'practices',
     items: [
       {
-        text: 'async,await,事件循环.md',
-        link: '/files/JavaScript高级语法/async_await_事件循环',
+        text: 'Demo',
+        link: '/files/practices/demo',
       },
       {
-        text: 'BOM,DOM简析.md',
-        link: '/files/JavaScript高级语法/BOM_DOM简析',
+        text: 'threejs',
+        link: '/files/practices/threejs',
       },
-      {
-        text: 'Iterator和Generator.md',
-        link: '/files/JavaScript高级语法/Iterator和Generator',
-      },
-      {
-        text: 'JavaScript高级语法1.md',
-        link: '/files/JavaScript高级语法/JavaScript高级语法1',
-      },
-      {
-        text: 'JavaScript高级语法2.md',
-        link: '/files/JavaScript高级语法/JavaScript高级语法2',
-      },
-      {
-        text: 'JavaScript高级语法3.md',
-        link: '/files/JavaScript高级语法/JavaScript高级语法3',
-      },
-      {
-        text: 'JavaScript高级语法4.md',
-        link: '/files/JavaScript高级语法/JavaScript高级语法4',
-      },
-      {
-        text: 'JSON细析,浏览器数据存储.md',
-        link: '/files/JavaScript高级语法/JSON细析_浏览器数据存储',
-      },
-      {
-        text: 'Promise.md',
-        link: '/files/JavaScript高级语法/Promise',
-      },
-      {
-        text: 'Proxy和Reflect.md',
-        link: '/files/JavaScript高级语法/Proxy和Reflect',
-      },
-      {
-        text: '模块化.md',
-        link: '/files/JavaScript高级语法/模块化',
-      },
-      {
-        text: '错误处理.md',
-        link: '/files/JavaScript高级语法/错误处理',
-      },
-    ],
+    ]
   },
   {
     text: 'nodejs',
@@ -340,6 +298,61 @@ module.exports = [
       {
         text: '前端抢饭碗系列之Docker容器编排.MD',
         link: '/files/vmware/前端抢饭碗系列之Docker容器编排',
+      },
+    ],
+  },
+  {
+    text: 'JavaScript高级语法',
+    collapsible: true,
+    collapsed: false,
+    items: [
+      {
+        text: 'async,await,事件循环.md',
+        link: '/files/JavaScript高级语法/async_await_事件循环',
+      },
+      {
+        text: 'BOM,DOM简析.md',
+        link: '/files/JavaScript高级语法/BOM_DOM简析',
+      },
+      {
+        text: 'Iterator和Generator.md',
+        link: '/files/JavaScript高级语法/Iterator和Generator',
+      },
+      {
+        text: 'JavaScript高级语法1.md',
+        link: '/files/JavaScript高级语法/JavaScript高级语法1',
+      },
+      {
+        text: 'JavaScript高级语法2.md',
+        link: '/files/JavaScript高级语法/JavaScript高级语法2',
+      },
+      {
+        text: 'JavaScript高级语法3.md',
+        link: '/files/JavaScript高级语法/JavaScript高级语法3',
+      },
+      {
+        text: 'JavaScript高级语法4.md',
+        link: '/files/JavaScript高级语法/JavaScript高级语法4',
+      },
+      {
+        text: 'JSON细析,浏览器数据存储.md',
+        link: '/files/JavaScript高级语法/JSON细析_浏览器数据存储',
+      },
+      {
+        text: 'Promise.md',
+        link: '/files/JavaScript高级语法/Promise',
+      },
+      {
+        text: 'Proxy和Reflect.md',
+        link: '/files/JavaScript高级语法/Proxy和Reflect',
+      },
+      {
+        text: '模块化.md',
+        link: '/files/JavaScript高级语法/模块化',
+      },
+      {
+        text: '错误处理.md',
+        link: '/files/JavaScript高级语法/错误处理',
       },
     ],
   },
