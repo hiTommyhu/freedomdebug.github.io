@@ -120,6 +120,14 @@ module.exports = [
         text: '无头浏览器Puppeteer.md',
         link: '/files/others/无头浏览器Puppeteer',
       },
+      {
+        text: '前端二进制.md',
+        link: '/files/others/前端二进制',
+      },
+      {
+        text: '前端二进制2.md',
+        link: '/files/others/前端二进制2',
+      },
     ],
   },
   {
@@ -260,6 +268,31 @@ module.exports = [
       {
         text: 'SOLID.MD',
         link: '/files/软件设计/SOLID',
+      },
+    ],
+  },
+  {
+    text: 'linux',
+    items: [
+      {
+        text: 'docker.MD',
+        link: '/files/vmware/docker',
+      },
+      {
+        text: 'docker实践.MD',
+        link: '/files/vmware/docker实践',
+      },
+      {
+        text: '前端抢饭碗系列之Docker进阶部署.MD',
+        link: '/files/vmware/前端抢饭碗系列之Docker进阶部署',
+      },
+      {
+        text: '前端抢饭碗系列之初识Docker容器化部署.MD',
+        link: '/files/vmware/前端抢饭碗系列之初识Docker容器化部署',
+      },
+      {
+        text: '前端抢饭碗系列之Docker容器编排.MD',
+        link: '/files/vmware/前端抢饭碗系列之Docker容器编排',
       },
     ],
   },
