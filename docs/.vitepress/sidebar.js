@@ -14,6 +14,8 @@ module.exports = [
   },
   {
     text: 'JavaScript高级语法',
+    collapsible: true,
+    collapsed: false,
     items: [
       {
         text: 'async,await,事件循环.md',
@@ -98,6 +100,8 @@ module.exports = [
   },
   {
     text: 'others',
+    collapsible: true,
+    collapsed: false,
     items: [
       {
         text: 'ArrayBuffer转base64详解.md',
@@ -151,6 +155,8 @@ module.exports = [
   },
   {
     text: 'pack',
+    collapsible: true,
+    collapsed: false,
     items: [
       {
         text: '百分之99开发者没弄明白的babel知识.md',
@@ -222,6 +228,8 @@ module.exports = [
   },
   {
     text: 'WebWorker',
+    collapsible: true,
+    collapsed: true,
     items: [
       {
         text: 'index.html',
@@ -270,6 +278,8 @@ module.exports = [
   },
   {
     text: '设计模式',
+    collapsible: true,
+    collapsed: true,
     items: [
       {
         text: '单例模式',
@@ -308,6 +318,8 @@ module.exports = [
   },
   {
     text: 'linux',
+    collapsible: true,
+    collapsed: true,
     items: [
       {
         text: 'docker.MD',

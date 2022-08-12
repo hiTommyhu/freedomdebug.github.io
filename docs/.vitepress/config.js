@@ -6,15 +6,32 @@ module.exports = {
   dest: 'public',
   repo: '',
   docsRepo: '',
-  logo: '/images/logo.jpg',
   title: 'TommyHu.me',
   description: 'tommyhu.me',
   themeConfig: {
+    logo: '/images/logo.jpg',
+    editLink: {
+      pattern: 'https://github.com/freedomdebug/freedomdebug.github.io/docs/:path',
+      text: 'Edit this page on GitHub'
+    },
+    footer: {
+      message: 'Released under the MIT License.',
+      copyright: 'Copyright © 2022-present tommyHu'
+    },
+    // search: {
+    //   algolia: {
+    //     appKey: '',
+    //     indexName: '',
+    //     searchParameters: {
+    //       faeFilters: ['tags:guide,api']
+    //     }
+    //   },
+    // },
     sidebar,
     nav, 
     socialLinks: [
       { icon: "github", link: "https://github.com/freedomdebug" },
-      { icon: "gitee", link: "https://gitee.com/hellotommyhu" },
+      // { icon: "github", link: "https://gitee.com/hellotommyhu" },
     ]
   }
 }
