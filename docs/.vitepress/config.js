@@ -13,6 +13,7 @@ module.exports = {
   ],
   themeConfig: {
     logo: '/images/logo.jpg',
+    lastUpdated: true,
     editLink: {
       pattern: 'https://github.com/freedomdebug/freedomdebug.github.io/blob/master/docs/:path',
       text: 'Edit this page on GitHub'
