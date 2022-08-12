@@ -8,12 +8,8 @@ module.exports = {
   docsRepo: '',
   title: 'TommyHu.me',
   description: 'tommyhu.me',
-  // head: [
-  //   ['link', { rel: 'icon', href: '/images/favicon.ico' }],
-  // ],
   themeConfig: {
     logo: '/images/logo.jpg',
-    lastUpdated: true,
     editLink: {
       pattern: 'https://github.com/freedomdebug/freedomdebug.github.io/blob/master/docs/:path',
       text: 'Edit this page on GitHub'
@@ -22,20 +18,10 @@ module.exports = {
       message: 'Released under the MIT License.',
       copyright: 'Copyright © 2022-present tommyHu'
     },
-    // search: {
-    //   algolia: {
-    //     appKey: '',
-    //     indexName: '',
-    //     searchParameters: {
-    //       faeFilters: ['tags:guide,api']
-    //     }
-    //   },
-    // },
     sidebar,
     nav, 
     socialLinks: [
-      { icon: "github", link: "https://github.com/freedomdebug" },
-      // { icon: "github", link: "https://gitee.com/hellotommyhu" },
+      { icon: "github", link: "https://github.com/freedomdebug" }
     ]
   }
 }

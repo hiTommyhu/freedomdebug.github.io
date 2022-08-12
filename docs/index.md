@@ -17,7 +17,3 @@ hero:
       link: https://tommyhu.cn
 ---
 
-```bash
-console.log('Hello World!');
-```
-
