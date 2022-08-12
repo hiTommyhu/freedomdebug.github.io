@@ -3,6 +3,10 @@ module.exports = [
     text: 'Home',
     items: [
       {
+        text: 'Index',
+        link: '/',
+      },
+      {
         text: 'Home',
         link: '/files/home',
       }

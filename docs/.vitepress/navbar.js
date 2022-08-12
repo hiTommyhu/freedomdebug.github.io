@@ -1,6 +1,6 @@
 module.exports = [
     {
-      text: '老博客',
+      text: '老相好',
       link: 'http://tommyhu.cn',
     }
   ]
