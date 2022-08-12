@@ -8,6 +8,9 @@ module.exports = {
   docsRepo: '',
   title: 'TommyHu.me',
   description: 'tommyhu.me',
+  head: [
+    ['link', { rel: 'icon', href: '/images/favicon.ico' }],
+  ],
   themeConfig: {
     logo: '/images/logo.jpg',
     editLink: {
