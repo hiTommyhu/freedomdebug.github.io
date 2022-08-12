@@ -1,0 +1,1 @@
+import{_ as e,c as t,o as a,b as o}from"./app.109ab71e.js";var s="/images/mountain.jpg";const u=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"files/home.md"}'),r={name:"files/home.md"},n=o("img",{src:s},null,-1),c=[n];function i(_,m,p,d,l,f){return a(),t("div",null,c)}var g=e(r,[["render",i]]);export{u as __pageData,g as default};
