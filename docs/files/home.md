@@ -1,1 +1,1 @@
-<img src="/images/mountain.jpg"/>
+Stay Hungry Stay Foolish！

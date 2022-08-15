@@ -13,18 +13,31 @@ module.exports = [
     ]
   },
   {
-    text: 'practices',
+    text: '低代码',
     items: [
       {
-        text: 'Demo',
-        link: '/files/practices/demo',
+        text: 'Index',
+        link: '/files/低代码/index'
       },
       {
-        text: 'threejs',
-        link: '/files/practices/threejs',
-      },
+        text: '竞品分析',
+        link: '/files/低代码/竞品分析'
+      }
     ]
   },
+  // {
+  //   text: 'practices',
+  //   items: [
+  //     {
+  //       text: 'Demo',
+  //       link: '/files/practices/demo',
+  //     },
+  //     {
+  //       text: 'threejs',
+  //       link: '/files/practices/threejs',
+  //     },
+  //   ]
+  // },
   {
     text: 'nodejs',
     items: [
