@@ -43,7 +43,7 @@ module.exports = [
     items: [
       {
         text: 'css.md',
-        link: '/files/样式表/css',
+        link: '/files/css/css',
       },
     ]
   },

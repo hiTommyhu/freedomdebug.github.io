@@ -56,7 +56,7 @@ onMounted(() => {
 
       <template #doc-before><slot name="doc-before" /></template>
       <template #doc-after><slot name="doc-after" />
-        <div id="gitalk-container"></div>
+        <!-- <div id="gitalk-container"></div> -->
       </template>
 
       <template #aside-top><slot name="aside-top" /></template>

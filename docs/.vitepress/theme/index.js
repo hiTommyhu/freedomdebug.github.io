@@ -12,14 +12,14 @@ export default {
   // ...DefaultTheme,
   Layout,
   NotFound,
-  enhanceApp({ app }) {
-    registerComponents(app);
+  // enhanceApp({ app }) {
+  //   registerComponents(app);
 
-    app.use(vuePlugin, {
-      defaultDirection: "row", // 默认显示方向
-      ms: 30, // 编辑器防抖时间
-      handleError(errs) {}, // 错误信息
-      onMonacoCreated(monaco) {}, // monaco 创建成功时触发
-    });
-  },
+  //   app.use(vuePlugin, {
+  //     defaultDirection: "row", // 默认显示方向
+  //     ms: 30, // 编辑器防抖时间
+  //     handleError(errs) {}, // 错误信息
+  //     onMonacoCreated(monaco) {}, // monaco 创建成功时触发
+  //   });
+  // },
 }
