@@ -43,7 +43,7 @@ module.exports = [
     items: [
       {
         text: 'css.md',
-        link: '/files/others/css',
+        link: '/files/样式表/css',
       },
     ]
   },
@@ -72,14 +72,6 @@ module.exports = [
       {
         text: 'codes.md',
         link: '/files/others/codes',
-      },
-      {
-        text: 'docker.md',
-        link: '/files/others/docker',
-      },
-      {
-        text: 'linux yum源问题.md',
-        link: '/files/others/linux yum源问题',
       },
       {
         text: 'shell.md',
@@ -118,7 +110,7 @@ module.exports = [
     items: [
       {
         text: '百分之99开发者没弄明白的babel知识.md',
-        link: '/files/others/百分之99开发者没弄明白的babel知识',
+        link: '/files/pack/百分之99开发者没弄明白的babel知识',
       },
       {
         text: 'babel.md',
@@ -286,6 +278,10 @@ module.exports = [
       {
         text: 'docker实践.MD',
         link: '/files/vmware/docker实践',
+      },
+      {
+        text: 'linux yum源问题.md',
+        link: '/files/vmware/linux yum源问题',
       },
       {
         text: '前端抢饭碗系列之Docker进阶部署.MD',
