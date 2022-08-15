@@ -56,12 +56,12 @@ module.exports = {
       md.use(
         demoBlockPlugin,
         {
-          scriptImports: ["import * as THREE from 'three'"],
+          // scriptImports: ["import * as THREE from 'three'"],
           cssPreprocessor: 'less',
         }
       )
       // vue组件预览2
-      // ,md.use(markdownPlugin)
+      md.use(markdownPlugin)
     }
   }
 }
