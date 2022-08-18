@@ -241,5 +241,3 @@ test:
 > 参考地址：
 >
 > - https://www.ruanyifeng.com/blog/2016/07/yaml.html
-> - https://www.jianshu.com/p/97222440cd08
-> - https://daihainidewo.github.io/blog/yaml%E6%95%99%E7%A8%8B/
