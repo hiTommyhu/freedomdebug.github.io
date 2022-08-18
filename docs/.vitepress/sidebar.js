@@ -91,6 +91,10 @@ module.exports = [
         link: '/files/others/shell',
       },
       {
+        text: 'yaml.md',
+        link: '/files/others/yaml',
+      },
+      {
         text: 'vscode.md',
         link: '/files/others/vscode',
       },
