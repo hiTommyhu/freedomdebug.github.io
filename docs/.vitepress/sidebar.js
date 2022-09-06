@@ -279,7 +279,7 @@ module.exports = [
     items: [
       {
         text: 'SOLID.MD',
-        link: '/files/软件设计/SOLID',
+        link: '/files/软件设计/SOLID.MD',
       },
     ],
   },
