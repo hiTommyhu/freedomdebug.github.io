@@ -58,6 +58,10 @@ module.exports = [
         text: 'css.md',
         link: '/files/css/css',
       },
+      {
+        text: 'grid.md',
+        link: '/files/css/grid',
+      },
     ]
   },
   {
@@ -278,8 +282,8 @@ module.exports = [
     text: '软件设计',
     items: [
       {
-        text: 'SOLID.MD',
-        link: '/files/软件设计/SOLID.MD',
+        text: 'SOLID',
+        link: '/files/软件设计/solid',
       },
     ],
   },
