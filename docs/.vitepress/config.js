@@ -21,6 +21,7 @@ module.exports = {
     
   ],
   themeConfig: {
+    defaultMode: 'dark',
     repo: 'https://github.com/freedomdebug',
     repoLabel: 'GitHub',
     search: true,
