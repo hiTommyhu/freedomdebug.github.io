@@ -10,10 +10,7 @@ hero:
     alt: freedomdebug
   actions:
     - theme: brand
-      text: 新欢
+      text: 部落格
       link: /files/home.html
-    - theme: alt
-      text: 老相好
-      link: https://tommyhu.cn
 ---
 
