@@ -91,16 +91,21 @@ stylelint
 psd切图
 
 
-## webpack
+### webpack
 
 > 编译后calc表达式丢失，采用  width: ~'calc(100% - 120px)';
 
 
-#### input 的 compositionstart 和 compositionend 事件（禁止非直接输入）
+### input 的 compositionstart 和 compositionend 事件（禁止非直接输入）
 
 在 web 开发中，我们通常需要对输入的内容进行校验。这段代码虽然执行起来没有什么问题，但是会产生非直接输入，比方说我们输入“树莓派”，中间过程会输入拼音，每次输入字母都会触发input事件，然而当中文输入完成之前，都属于非直接输入。
 
-未禁止非直接输入
+
+#### 未禁止非直接输入
+
+
+![alt 属性文本](./imgs/2017-8-24-input-noC.gif)
+
  
 
  可以看到，当我们输入 “树莓派” 时，触发了9次 input 事件，这并非是我们想要的结果，我们希望直接输入(中文输入完成)后，再触发 input 的业务逻辑，此时就需要引入其他两个事件 compositionstart 和 compositionend
@@ -116,10 +121,11 @@ compositionend
 是指中文输入法输入完成时触发，这是得到的结果就是最终输入完成的结果，此事件仅执行一次。
 需要特别注意的是：该事件触发顺序在 input 事件之后，故而需要在此事件的处理逻辑里调用一次 input 里边的业务逻辑
 
-禁止非直接输入
+#### 禁止非直接输入
+
 // 添加标记位 lock ,当用户未输入完时，lock 为 true
 
-```
+```javascript
 var lock = false;
 var inputEle = document.getElementById('inputEle');
 // input 事件中的处理逻辑, 这里仅仅打印文本
@@ -139,5 +145,49 @@ inputEle.addEventListener('input', function (event) {
     if (!lock) todo(event.target.value);
 });
 ```
+![alt 属性文本](./imgs/2017-8-24-input-withC.gif)
 
 可以看到，此时已经过滤了全部非直接输入，只有当用户输入中文结束时才会触发 input 中的业务逻辑 ~
+
+
+
+## 模糊匹配查询input
+
+```javascript
+<input 
+    @focus="isForSearch = true" 
+    debounce="100" 
+    v-model="searchValue" 
+    @compositionstart="searchComposition = true" 
+    @compositionend="searchComposition = false" 
+    type="text" 
+    placeholder="请输入书名"
+/>
+
+watch: {
+    searchComposition(nv) {
+        if (nv == false) {
+            this.searchBooks()
+        }
+    },
+    searchValue() {
+        this.searchBooks()
+    },
+}
+
+
+methods: {
+    searchBooks() {
+        let nv = this.searchValue
+        if (this.searchComposition || nv == this.lastSearchValue) {
+            return
+        }
+
+        this.lastSearchValue = nv
+        if (this.searchValue == "") {
+            this.searchList = []
+            return
+        }
+    }
+}
+```
