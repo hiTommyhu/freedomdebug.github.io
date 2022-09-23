@@ -1,0 +1,1 @@
+import{_ as s,c as n,o as p,a}from"./app.6381c036.js";const y=JSON.parse('{"title":"webpack","description":"","frontmatter":{},"headers":[{"level":2,"title":"webpack","slug":"webpack"}],"relativePath":"files/css/css.md"}'),e={name:"files/css/css.md"},l=a("",39),o=[l];function t(c,i,r,d,u,C){return p(),n("div",null,o)}var D=s(e,[["render",t]]);export{y as __pageData,D as default};
