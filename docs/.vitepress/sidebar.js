@@ -200,7 +200,7 @@ module.exports = [
   {
     text: 'WebWorker',
     collapsible: true,
-    collapsed: true,
+    collapsed: false,
     items: [
       {
         text: 'index.html',
@@ -250,7 +250,7 @@ module.exports = [
   {
     text: '设计模式',
     collapsible: true,
-    collapsed: true,
+    collapsed: false,
     items: [
       {
         text: '单例模式',
@@ -290,7 +290,7 @@ module.exports = [
   {
     text: 'linux',
     collapsible: true,
-    collapsed: true,
+    collapsed: false,
     items: [
       {
         text: 'docker.MD',
