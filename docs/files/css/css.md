@@ -191,3 +191,21 @@ methods: {
     }
 }
 ```
+
+## 属性操作
+
+```
+// 获取容器元素
+let wrapper = document.getElementById('btnWrapper');
+// 先给容器设置一个css变量并附初始值
+wrapper.style.setProperty('--groove-left', '12px');
+// 获取按钮元素
+let btns = document.getElementsByClassName('btn');
+for (let i = 0; i < btns.length; i++) {
+    // 给每个按钮添加点击事件
+    btns[i].addEventListener('click', function (e) {
+        // 点击后，修改css变量的值
+        wrapper.style.setProperty('--groove-left', `calc(12px + ${i * 50}%)`);
+    })
+}
+```
