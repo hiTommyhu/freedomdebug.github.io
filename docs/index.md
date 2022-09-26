@@ -12,7 +12,6 @@ hero:
     - theme: brand
       text: 部落格
       link: /files/home.html
-  actions:
     - theme: alt
       text: 老相好
       link: http://tommyhu.cn
