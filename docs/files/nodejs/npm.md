@@ -9,3 +9,20 @@ chalk.green('xxx')
 chalk.yellow('xxx')
 ```
 
+## shelljs
+> 功能：执行脚本命令
+```
+const shell = require('shelljs');
+const shellPromise = (cmd, silent = true) => {
+    return new Promise((resolve, reject) => {
+        shell.exec(cmd, { silent: silent }, function(code, stdout, stderr) {
+            return code === 0 ? resolve(stdout) : reject(stderr)
+        });
+    })
+}
+
+const test =  async () => {
+  const currentBranch =  (await shellPromise('git branch --show-current') || '').trim()
+  return currentBranch
+}
+```
