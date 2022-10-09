@@ -282,6 +282,10 @@ module.exports = [
     text: '软件设计',
     items: [
       {
+        text: '首页',
+        link: '/files/软件设计/index',
+      },
+      {
         text: 'SOLID',
         link: '/files/软件设计/solid',
       },
