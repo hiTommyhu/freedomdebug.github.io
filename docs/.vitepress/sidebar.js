@@ -25,6 +25,15 @@ module.exports = [
       }
     ]
   },
+  {
+    text: '代码规范',
+    items: [
+      {
+        text: 'Index',
+        link: '/files/代码规范/README'
+      }
+    ]
+  },
   // {
   //   text: 'practices',
   //   items: [
