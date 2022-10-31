@@ -102,3 +102,23 @@ loadJS("xxxx.js", function () {
    console.log("加载成功")
 });
 ```
+
+```javascript
+// 动态加载css脚本
+function loadStyleString(cssText) {
+  var style = document.createElement('style')
+  style.type = 'text/css'
+  try {
+    // firefox、safari、chrome和Opera
+    style.appendChild(document.createTextNode(cssText))
+  } catch (ex) {
+    // IE早期的浏览器 ,需要使用style元素的stylesheet属性的cssText属性
+    style.styleSheet.cssText = cssText
+  }
+  document.getElementsByTagName('head')[0].appendChild(style)
+}
+
+// 测试
+var css = 'body{color:blue;}'
+loadStyleString(css)
+```
