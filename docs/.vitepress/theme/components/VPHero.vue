@@ -116,7 +116,7 @@ defineProps<{
   max-width: 392px;
   letter-spacing: -0.4px;
   line-height: 40px;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
   white-space: pre-wrap;
 }
@@ -150,7 +150,7 @@ defineProps<{
   .name,
   .text {
     line-height: 64px;
-    font-size: 56px;
+    font-size: 50px;
   }
 
   .VPHero.has-image .name,
