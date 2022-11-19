@@ -1,0 +1,1 @@
+[https://github.com/freedomdebug/babel-handbook/blob/master/translations/zh-Hans/user-handbook.md](https://github.com/freedomdebug/babel-handbook/blob/master/translations/zh-Hans/user-handbook.md)
