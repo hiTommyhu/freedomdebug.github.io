@@ -34,6 +34,15 @@ module.exports = [
       }
     ]
   },
+  {
+    text: '代码分析',
+    items: [
+      {
+        text: 'Index',
+        link: '/files/代码分析/index'
+      }
+    ]
+  },
   // {
   //   text: 'practices',
   //   items: [
