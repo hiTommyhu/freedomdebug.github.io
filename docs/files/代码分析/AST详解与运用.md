@@ -6,7 +6,7 @@
 
 从上图中我们可以看到,JavaScript引擎做的第一件事情就是把JavaScript代码编译成抽象语法树,于是就有了本文对AST抽象语法树的浅析.
 
-### **一、什么是AST抽象语法树**
+## **一、什么是AST抽象语法树**
 
 我们都知道,在传统的编译语言的流程中,程序的一段源代码在执行之前会经历三个步骤,统称为"编译":
 
@@ -22,11 +22,11 @@
 
 简单理解,就是把我们写的代码按照一定的规则转换成一种树形结构。
 
-### **二、AST的用途**
+## **二、AST的用途**
 
 AST的作用不仅仅是用来在JavaScript引擎的编译上，我们在实际的开发过程中也是经常使用的，比如我们常用的babel插件将 ES6转化成ES5、使用 UglifyJS来压缩代码 、css预处理器、开发WebPack插件、Vue-cli前端自动化工具等等，这些底层原理都是基于AST来实现的，AST能力十分强大， 能够帮助开发者理解JavaScript这门语言的精髓。
 
-### **三、AST的结构**
+## **三、AST的结构**
 
 我们先来看一组简单的AST树状结构:
 
@@ -75,7 +75,7 @@ const team = '大转转FE'
 
 我们可以看到，一个标准的AST结构可以理解为一个json对象，那我们就可以通过一些方法去解析和操作它，这里我们先提供一个在线检测工具,大家可以自行去体验: [https://esprima.org/demo/parse.html#](https://link.zhihu.com/?target=https%3A//esprima.org/demo/parse.html%23)
 
-### **四、AST编译过程**
+## **四、AST编译过程**
 
 AST编译流程图:
 
@@ -83,7 +83,7 @@ AST编译流程图:
 
 我们可以看到,AST工具会源代码经过四个阶段的转换：
 
-### **1.词法分析scanner**
+## **1.词法分析scanner**
 
 ```text
 var company = 'zhuanzhuan'
@@ -100,7 +100,7 @@ var company = 'zhuanzhuan'
 
 ![img](./images/v2-f8f7a39fb7eabb1674cd755a26caa07b_720w.jpg)
 
-### **2.parser生成AST树**
+## **2.parser生成AST树**
 
 这里我们使用**esprima**去生成, 安装相关依赖 npm i esprima --save
 
@@ -138,7 +138,7 @@ Script {
 
 这样我们就得到了一棵AST树
 
-### **3.traverse对AST树遍历,进行增删改查**
+## **3.traverse对AST树遍历,进行增删改查**
 
 这里我们使用**estraverse**去完成, 安装相关依赖 npm i estraverse --save
 
@@ -181,7 +181,7 @@ Script {
 
 这样一来,我们就完成了对AST的遍历更新。
 
-### **4.generator将更新后的AST转化成代码**
+## **4.generator将更新后的AST转化成代码**
 
 这里我们使用**escodegen**去生成, 安装相关依赖 npm i escodegen --save
 
@@ -212,7 +212,7 @@ const team = '大转转FE';
 
 这样一来,我们就完成了对一段简单代码的AST编译过程。
 
-### **五、babel原理浅析**
+## **五、babel原理浅析**
 
 **Babel插件就是作用于抽象语法树。**
 
@@ -227,7 +227,7 @@ Babel 的三个主要处理步骤分别是： 解析（parse），转换（trans
   代码生成其实很简单：深度优先遍历整个 AST，然后构建可以表示转换后代码的字符串。
   Babel通过**babel-generator**再转换成js代码，过程就是深度优先遍历整个AST，然后构建可以表示转换后代码的字符串。
 
-### **六、vue中AST抽象语法树的运用;**
+## **六、vue中AST抽象语法树的运用;**
 
 vue中AST主要运用在**模板编译**过程.
 
@@ -344,7 +344,7 @@ function parseHTML (html, options) {
 
 以上就是vue解析器生成AST语法树的主流程了，代码细节的地方还需要自己去解读源码，源码位置:**\vue\packages\weex-template-compiler\build.js**
 
-### **结语：**
+## **结语：**
 
 AST抽象语法树的知识点作为JavaScript中(任何编程语言中都有ast这个概念,这里就不过多赘述)相对基础的，也是最不可忽略的知识，带给我们的启发是无限可能的，它就像一把螺丝刀，能够拆解javascript这台庞大的机器，让我们能够看到一些本质的东西，同时也能通过它批量构建任何javascript代码。
 
@@ -354,7 +354,7 @@ AST抽象语法树的知识点作为JavaScript中(任何编程语言中都有ast
 
  (未完待续)
 
-### **参考文献**
+## **参考文献**
 
 [1]朱永盛. WebKit 技术内幕[M]. 电子工业出版社
 
