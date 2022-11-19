@@ -13,7 +13,7 @@ hero:
       text: 进屋
       link: /files/home.html
     - theme: alt
-      text: 老相好(始2009)
+      text: 老相好(始于2009)
       link: http://tommyhu.cn
 ---
 
