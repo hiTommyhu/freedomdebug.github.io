@@ -38,15 +38,15 @@
 
 当屏幕的尺寸比例刚好是 16:9 时
 
-![图片](.\images\2.jpg)
+![图片](./images/2.jpg)
 
 当屏幕的尺寸比例大于 16:9 时
 
-![图片](.\images\vwh03.jpg)vwh03.jpg
+![图片](./images/vwh03.jpg)vwh03.jpg
 
 当屏幕的尺寸比例小于 16:9 时
 
-![图片](.\images\vwh09.jpg)vwh09.jpg
+![图片](./images/vwh09.jpg)vwh09.jpg
 
 #### 实现思路
 
