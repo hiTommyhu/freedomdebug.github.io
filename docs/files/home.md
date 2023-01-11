@@ -9,3 +9,5 @@ Stay Hungry Stay Foolish！
 
 
 [多线程](/files/others/多线程)
+
+[前端精准计时器](/files/others/前端精准计时器)
