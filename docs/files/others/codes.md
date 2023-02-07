@@ -67,6 +67,7 @@ export {
 ```
 
 use
+
 ```
 import dialog from './components/dialog.vue'
 this.dialogInstance = new ComponentMount(
