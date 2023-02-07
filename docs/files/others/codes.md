@@ -89,3 +89,9 @@ this.dialogInstance = new ComponentMount(
     }
 )
 ```
+
+### other
+```
+// 获取dom后再append
+this.$refs.box.$el
+```
