@@ -86,6 +86,10 @@ module.exports = [
     text: '图形图像',
     items: [
       {
+        text: 'index.md',
+        link: '/files/图形图像/index',
+      },
+      {
         text: 'gojs.md',
         link: '/files/图形图像/gojs',
       },
