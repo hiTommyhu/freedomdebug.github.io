@@ -307,6 +307,10 @@ module.exports = [
         text: 'SOLID',
         link: '/files/软件设计/solid',
       },
+      {
+        text: '常用软件',
+        link: '/files/软件设计/software',
+      },
     ],
   },
   {
