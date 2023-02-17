@@ -43,19 +43,15 @@ module.exports = [
       }
     ]
   },
-  // {
-  //   text: 'practices',
-  //   items: [
-  //     {
-  //       text: 'Demo',
-  //       link: '/files/practices/demo',
-  //     },
-  //     {
-  //       text: 'threejs',
-  //       link: '/files/practices/threejs',
-  //     },
-  //   ]
-  // },
+  {
+    text: 'miniprogram',
+    items: [
+      {
+        text: 'index',
+        link: '/files/miniprogram/index',
+      },
+    ]
+  },
   {
     text: 'nodejs',
     items: [
