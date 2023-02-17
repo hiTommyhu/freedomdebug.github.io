@@ -1,0 +1,3 @@
+<template name="test-template">
+    <view class="template-text">{{message}}</view>
+</template>

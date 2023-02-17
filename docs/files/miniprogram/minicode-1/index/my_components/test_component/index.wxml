@@ -1,0 +1,13 @@
+<view class="component-text">
+    test_component
+    <view>
+        <text>{{innerText}}</text>
+    </view>
+    <view>
+        <text>{{newInnerText}}</text>
+    </view>
+    <slot></slot>
+    someData.msg：{{someData.msg}}
+    myBehaviorData.msg{{myBehaviorData.msg}}
+    <button class="mini-btn" type="warn" capture-bind:tap="onMyButtonTap">触发事件到父page</button>
+</view>

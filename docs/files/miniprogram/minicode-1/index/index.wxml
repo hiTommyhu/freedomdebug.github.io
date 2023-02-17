@@ -1,0 +1,50 @@
+<!-- include 可以将目标文件除了 <template/> <wxs/> 外的整个代码引入，相当于是拷贝到 include 位置 -->
+<include src="./include-template/header.wxml"/>
+
+<!-- import 有作用域的概念，即只会 import 目标文件中定义的 template，而不会 import 目标文件 import 的 template。 -->
+<import src="./template/test.wxml" />
+
+<!-- wxs -->
+<wxs src="./wxs/test.wxs" module="testWXS" />
+<view>{{testWXS.msg}}</view>
+<view> {{testWXS.bar(testWXS.FOO)}}</view>
+
+<!-- wxs 内部声明 -->
+<wxs module="testWXSInWxml">
+    var helloWXS = 'i am from testWXSInWxml'
+    module.exports = {
+        msg: helloWXS,
+    }
+</wxs>
+<view>i am data from wxs in wxm: {{testWXSInWxml.msg}}</view>
+
+<!-- component -->
+<component-tag-name 
+    class="component-tag-name component-out-class" 
+    inner-text="{{input_value}}" 
+    bind:componentEvent="onComponentEvent"
+/>
+{{test.msg}}
+
+<!-- 其他 -->
+<view class="intro" wx:if="{{showAB}}">
+    <template is="test-template" data="{{message: templateMessage}}" />
+    <view hidden="{{hiddenDom}}">i am hiddenDom</view>
+    <!-- 事件信息https://developers.weixin.qq.com/miniprogram/dev/framework/view/wxml/event.html -->
+    <view 
+        wx:for="{{objectArray}}" 
+        wx:key="index" 
+        wx:for-item="item"
+        data-element-type="1"
+        data-elementType="2"
+        bindtap="_forItemTap"
+    >
+        {{index}}、{{item.unique}}
+    </view>
+
+    <input class="weui-input" model:value="{{input_value}}" />{{input_value}}
+</view>
+<block wx:else>
+    showAB:{{showAB}}
+</block>
+<include src="./include-template/footer.wxml"/>

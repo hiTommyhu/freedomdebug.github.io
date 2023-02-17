@@ -1,0 +1,14 @@
+@import "./template/test.wxss";
+.intro {
+  margin: 30px;
+  text-align: center;
+}
+
+/* 引用组件的样式 */
+.component-out-class {
+    font-weight: bold;
+}
+
+.weui-input {
+    border: 1rpx solid #000;
+}

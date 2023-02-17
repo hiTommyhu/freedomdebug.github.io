@@ -1,0 +1,5 @@
+module.exports = {
+    logicFun: function(d) {
+        return "logicFun" + d;
+    }
+}
