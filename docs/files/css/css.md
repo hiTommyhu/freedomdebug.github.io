@@ -209,3 +209,18 @@ for (let i = 0; i < btns.length; i++) {
     })
 }
 ```
+
+## 文案多行省略号显示 CSS -webkit-box-orient: vertical 属性编译后丢失问题详解
+```
+overflow: hidden;
+width: 77px;
+text-align: left;
+text-decoration: line-through;
+text-overflow: ellipsis;
+word-break: break-all;
+display: -webkit-box;
+-webkit-line-clamp:2;
+/* autoprefixer: ignore next */
+-webkit-box-orient: vertical;
+```
+注意-webkit-box-orient: vertical;可能编译打包丢失，增加/* autoprefixer: ignore next */
