@@ -1,4 +1,4 @@
-### Browserslist: caniuse-lite is outdated. Please run: npx browserslist@latest --update-db
+## Browserslist: caniuse-lite is outdated. Please run: npx browserslist@latest --update-db
 
 ```
 yarn upgrade
@@ -232,3 +232,14 @@ display: -webkit-box;
 -webkit-box-orient: vertical;
 ```
 注意-webkit-box-orient: vertical;可能编译打包丢失，增加/* autoprefixer: ignore next */
+
+## 判断文字是否有省略号
+```
+@click="toast($event, 'xxxxx')"
+toast(e, msg) {
+    const box = e.target
+    if (box.scrollWidth > box.offsetWidth) {
+        toastMessage(msg)
+    }
+}
+```
