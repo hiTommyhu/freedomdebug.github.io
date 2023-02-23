@@ -1,3 +1,5 @@
+![alt 属性文本](./images/nodemodules.jpg)
+
 # node常用包
 
 ## chalk 
