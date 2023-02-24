@@ -220,6 +220,19 @@ module.exports = [
     ],
   },
   {
+    text: 'react',
+    items: [
+      {
+        text: 'index',
+        link: '/files/react/index',
+      },
+      {
+        text: '依赖包',
+        link: '/files/react/依赖包',
+      },
+    ],
+  },
+  {
     text: 'WebWorker',
     collapsible: true,
     collapsed: false,
