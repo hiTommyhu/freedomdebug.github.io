@@ -90,8 +90,13 @@ this.dialogInstance = new ComponentMount(
 )
 ```
 
-### other
+## other
 ```
 // 获取dom后再append
 this.$refs.box.$el
+```
+
+## 复制一个数组
+```
+[].slice()
 ```
