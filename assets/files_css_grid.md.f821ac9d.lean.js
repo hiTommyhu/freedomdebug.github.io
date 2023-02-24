@@ -1,0 +1,1 @@
+import{_ as s,c as a,o as n,a as p}from"./app.834c9cf3.js";const y=JSON.parse('{"title":"display \u5C5E\u6027","description":"","frontmatter":{},"headers":[],"relativePath":"files/css/grid.md"}'),l={name:"files/css/grid.md"},e=p("",32),o=[e];function c(r,i,t,d,A,C){return n(),a("div",null,o)}var u=s(l,[["render",c]]);export{y as __pageData,u as default};
