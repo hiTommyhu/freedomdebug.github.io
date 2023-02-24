@@ -97,6 +97,10 @@ module.exports = [
     collapsed: false,
     items: [
       {
+        text: '代码零碎',
+        link: '/files/others/codes',
+      },
+      {
         text: 'ArrayBuffer转base64详解.md',
         link: '/files/others/ArrayBuffer转base64详解',
       },
