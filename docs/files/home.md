@@ -17,3 +17,7 @@ Stay Hungry Stay Foolish！
 
 * Module federation (模块联邦)
 > Multiple separate builds should form a single application. These separate builds should not have dependencies between each other, so they can be developed and deployed individually. This is often known as Micro-Frontends, but is not limited to that.
+
+## 小tips
+
+* [设计思维](/files/软件设计/设计思维)
