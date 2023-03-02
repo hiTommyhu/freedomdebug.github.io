@@ -223,7 +223,6 @@ for (let i = 0; i < btns.length; i++) {
 overflow: hidden;
 width: 77px;
 text-align: left;
-text-decoration: line-through;
 text-overflow: ellipsis;
 word-break: break-all;
 display: -webkit-box;
@@ -238,7 +237,11 @@ display: -webkit-box;
 @click="toast($event, 'xxxxx')"
 toast(e, msg) {
     const box = e.target
-    if (box.scrollWidth > box.offsetWidth) {
+    if (
+      box.scrollWidth > box.offsetWidth || 
+      // 多行省略
+      box.scrollHeight > box.offsetHeight 
+    ){
         toastMessage(msg)
     }
 }
