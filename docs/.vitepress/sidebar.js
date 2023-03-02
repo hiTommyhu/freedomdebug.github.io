@@ -95,7 +95,7 @@ module.exports = [
       },
       {
         text: '视频处理',
-        link: '/files/图形图像视频/视频',
+        link: '/files/图形图像视频/视频处理',
       },
     ]
   },
