@@ -83,15 +83,19 @@ module.exports = [
     ]
   },
   {
-    text: '图形图像',
+    text: '图形图像视频',
     items: [
       {
-        text: 'index.md',
-        link: '/files/图形图像/index',
+        text: 'index',
+        link: '/files/图形图像视频/index',
       },
       {
-        text: 'gojs.md',
-        link: '/files/图形图像/gojs',
+        text: 'gojs',
+        link: '/files/图形图像视频/gojs',
+      },
+      {
+        text: '视频处理',
+        link: '/files/图形图像视频/视频',
       },
     ]
   },
@@ -267,6 +271,10 @@ module.exports = [
   {
     text: '有关http',
     items: [
+      {
+        text: 'index',
+        link: '/files/有关http/index',
+      },
       {
         text: 'crlf释义.md',
         link: '/files/有关http/crlf释义',
