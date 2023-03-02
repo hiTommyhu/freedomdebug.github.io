@@ -69,6 +69,10 @@ module.exports = [
     text: '样式表',
     items: [
       {
+        text: 'index.md',
+        link: '/files/css/index',
+      },
+      {
         text: 'css.md',
         link: '/files/css/css',
       },
