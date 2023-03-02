@@ -80,7 +80,6 @@ import{_ as s,c as n,o as a,a as p}from"./app.834c9cf3.js";var l="/assets/2017-8
 <span class="line"><span style="color:#A6ACCD;"></span></span></code></pre></div><h2 id="\u6587\u6848\u591A\u884C\u7701\u7565\u53F7\u663E\u793A-css-webkit-box-orient-vertical-\u5C5E\u6027\u7F16\u8BD1\u540E\u4E22\u5931\u95EE\u9898\u8BE6\u89E3" tabindex="-1">\u6587\u6848\u591A\u884C\u7701\u7565\u53F7\u663E\u793A CSS -webkit-box-orient: vertical \u5C5E\u6027\u7F16\u8BD1\u540E\u4E22\u5931\u95EE\u9898\u8BE6\u89E3 <a class="header-anchor" href="#\u6587\u6848\u591A\u884C\u7701\u7565\u53F7\u663E\u793A-css-webkit-box-orient-vertical-\u5C5E\u6027\u7F16\u8BD1\u540E\u4E22\u5931\u95EE\u9898\u8BE6\u89E3" aria-hidden="true">#</a></h2><div class="language-"><span class="copy"></span><pre><code><span class="line"><span style="color:#A6ACCD;">overflow: hidden;</span></span>
 <span class="line"><span style="color:#A6ACCD;">width: 77px;</span></span>
 <span class="line"><span style="color:#A6ACCD;">text-align: left;</span></span>
-<span class="line"><span style="color:#A6ACCD;">text-decoration: line-through;</span></span>
 <span class="line"><span style="color:#A6ACCD;">text-overflow: ellipsis;</span></span>
 <span class="line"><span style="color:#A6ACCD;">word-break: break-all;</span></span>
 <span class="line"><span style="color:#A6ACCD;">display: -webkit-box;</span></span>
@@ -90,7 +89,11 @@ import{_ as s,c as n,o as a,a as p}from"./app.834c9cf3.js";var l="/assets/2017-8
 <span class="line"><span style="color:#A6ACCD;"></span></span></code></pre></div><p>\u6CE8\u610F-webkit-box-orient: vertical;\u53EF\u80FD\u7F16\u8BD1\u6253\u5305\u4E22\u5931\uFF0C\u589E\u52A0/* autoprefixer: ignore next */</p><h2 id="\u5224\u65AD\u6587\u5B57\u662F\u5426\u6709\u7701\u7565\u53F7" tabindex="-1">\u5224\u65AD\u6587\u5B57\u662F\u5426\u6709\u7701\u7565\u53F7 <a class="header-anchor" href="#\u5224\u65AD\u6587\u5B57\u662F\u5426\u6709\u7701\u7565\u53F7" aria-hidden="true">#</a></h2><div class="language-"><span class="copy"></span><pre><code><span class="line"><span style="color:#A6ACCD;">@click=&quot;toast($event, &#39;xxxxx&#39;)&quot;</span></span>
 <span class="line"><span style="color:#A6ACCD;">toast(e, msg) {</span></span>
 <span class="line"><span style="color:#A6ACCD;">    const box = e.target</span></span>
-<span class="line"><span style="color:#A6ACCD;">    if (box.scrollWidth &gt; box.offsetWidth) {</span></span>
+<span class="line"><span style="color:#A6ACCD;">    if (</span></span>
+<span class="line"><span style="color:#A6ACCD;">      box.scrollWidth &gt; box.offsetWidth || </span></span>
+<span class="line"><span style="color:#A6ACCD;">      // \u591A\u884C\u7701\u7565</span></span>
+<span class="line"><span style="color:#A6ACCD;">      box.scrollHeight &gt; box.offsetHeight </span></span>
+<span class="line"><span style="color:#A6ACCD;">    ){</span></span>
 <span class="line"><span style="color:#A6ACCD;">        toastMessage(msg)</span></span>
 <span class="line"><span style="color:#A6ACCD;">    }</span></span>
 <span class="line"><span style="color:#A6ACCD;">}</span></span>
