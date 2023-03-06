@@ -31,3 +31,8 @@ const test =  async () => {
 
 ## recast
 > 玩转AST
+
+
+## joi
+> nodejs服务参数验证
+> https://github.com/hapijs/joi/blob/v8.0.5/API.md#refkey-options
