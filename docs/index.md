@@ -6,7 +6,7 @@ hero:
   text: 十步杀一人，千里不留行.
   tagline: 一刀叔叔
   image:
-    src: /images/logo.jpg
+    src: /images/胡一刀.png
     alt: freedomdebug
   actions:
     - theme: brand
