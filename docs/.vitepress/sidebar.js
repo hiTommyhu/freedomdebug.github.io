@@ -161,7 +161,7 @@ module.exports = [
     items: [
       {
         text: 'webpack别名路径提示信息丢失问题',
-        link: '/files/pack/webpack别名路径提示信息丢失问题
+        link: '/files/pack/webpack别名路径提示信息丢失问题',
       },
       {
         text: '百分之99开发者没弄明白的babel知识.md',
