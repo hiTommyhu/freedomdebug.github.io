@@ -36,3 +36,8 @@ const test =  async () => {
 ## joi
 > nodejs服务参数验证
 > https://github.com/hapijs/joi/blob/v8.0.5/API.md#refkey-options
+
+
+## rrweb 
+> 客户端操作录制和播放，例如在某个重要的支付环境录制客户操作，然后实现真实场景模拟回放
+> https://github.com/rrweb-io/rrweb
