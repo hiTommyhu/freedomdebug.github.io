@@ -105,6 +105,10 @@ module.exports = [
     collapsed: false,
     items: [
       {
+        text: '刀哥杂货铺',
+        link: '/files/others/index',
+      },
+      {
         text: '代码零碎',
         link: '/files/others/codes',
       },
