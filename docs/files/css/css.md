@@ -246,3 +246,8 @@ toast(e, msg) {
     }
 }
 ```
+
+## iphone，ios部分机型下高度塌陷
+```
+flex-shrink: 0;
+```
