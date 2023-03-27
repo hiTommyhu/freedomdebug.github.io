@@ -1,0 +1,1 @@
+import{_ as s,c as a,o as e,a as n}from"./app.01954d48.js";const C=JSON.parse('{"title":"vscode\u63D2\u4EF6","description":"","frontmatter":{},"headers":[],"relativePath":"files/others/vscode.md"}'),l={name:"files/others/vscode.md"},o=n("",9),p=[o];function c(t,r,i,d,_,u){return e(),a("div",null,p)}var v=s(l,[["render",c]]);export{C as __pageData,v as default};
