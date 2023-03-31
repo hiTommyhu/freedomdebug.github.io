@@ -299,3 +299,11 @@ flex-grow（其次是 flex-grow，grow英文意思是<扩大，扩展，增加>,
 ）
 flex-shrink（最后是 flex-shrink， shrink英文意思是<收缩，>，这就代表当父元素的宽度小于子元素宽度之和时，并且超出了父元素的宽度，这时，flex-shrink就会说外面的世界太苦了，我还是回到父亲的怀抱中去吧！因此，flex-shrink就会按照一定的比例进行收缩。）
 ```
+
+## flex灵活换行
+```
+flex-flow 属性是 flex-direction 和 flex-wrap 属性的复合属性。
+flex-flow 属性用于设置或检索弹性盒模型对象的子元素排列方式。
+flex-direction 属性规定灵活项目的方向。
+flex-wrap 属性规定灵活项目是否拆行或拆列。 
+```
