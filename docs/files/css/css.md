@@ -251,3 +251,51 @@ toast(e, msg) {
 ```
 flex-shrink: 0;
 ```
+
+## flex高度自适应
+```
+<div id="root">
+  <header>
+   test
+  </header>
+  <main>
+     content
+  </main>
+</div>
+
+body {
+      margin: 0;
+      padding: 0;
+    }
+    #root {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      height: 50px;
+      flex: 0 0 auto;
+      background: orange;
+    }
+
+    main {
+      // 高度自适应
+      flex-grow: 1;
+      background-color: blueviolet;
+    }
+```
+
+```
+flex-grow、flex-shrink、flex-basis三个属性的作用：
+在flex布局中，父元素在不同宽度下，子元素是如何分配父元素空间的。
+
+(注意：这三个属性都是在子元素上设置的，下面小编要讲的是父元素，指以flex布局的元素(display:flex))
+
+小编这里先教一下大家如何快速记住这三个属性：
+
+flex-basis （首先是 flex-basis ，basis英文意思是<主要成分>，所以他和width放在一起时,肯定把width干掉，basis遇到width时就会说我才是最主要的成分，你是次要成分，所以见到我的时候你要靠边站。）
+flex-grow（其次是 flex-grow，grow英文意思是<扩大，扩展，增加>,这就代表当父元素的宽度大于子元素宽度之和时，并且父元素有剩余，这时，flex-grow就会说我要成长，我要长大，怎么样才能成长呢，当然是分享父元素的空间了。见下面第二个属性的内容
+）
+flex-shrink（最后是 flex-shrink， shrink英文意思是<收缩，>，这就代表当父元素的宽度小于子元素宽度之和时，并且超出了父元素的宽度，这时，flex-shrink就会说外面的世界太苦了，我还是回到父亲的怀抱中去吧！因此，flex-shrink就会按照一定的比例进行收缩。）
+```
