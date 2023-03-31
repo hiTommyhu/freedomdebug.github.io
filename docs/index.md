@@ -14,6 +14,6 @@ hero:
       link: /files/home.html
     - theme: alt
       text: 老相好(始于2009)
-      link: http://tommyhu.cn
+      link: https://tommyhu.cn
 ---
 
